@@ -32,6 +32,7 @@ public class Device {
     @Column(name = "status")
     private Boolean status;
 
+    @Lob
     @NotBlank
     @Column(name = "user_agent", columnDefinition = "TEXT", nullable = false)
     private String userAgent;
@@ -55,4 +56,8 @@ public class Device {
     protected void onUpdate() {
         updatedAt = Instant.now();
     }
+
+    @ManyToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private User user;
 }

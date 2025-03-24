@@ -23,8 +23,9 @@ public class Document {
     @Column(name = "description")
     private String description;
 
+    @Lob
     @NotBlank
-    @Column(name = "content")
+    @Column(name = "content", columnDefinition = "TEXT")
     private String content;
 
     @NotNull
@@ -46,4 +47,8 @@ public class Document {
     protected void onUpdate() {
         updatedAt = Instant.now();
     }
+
+    @ManyToOne
+    @JoinColumn(name = "course_id", referencedColumnName = "id")
+    private Course course;
 }

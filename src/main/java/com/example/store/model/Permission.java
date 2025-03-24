@@ -33,4 +33,7 @@ public class Permission {
     protected void onUpdate() {
         updatedAt = Instant.now();
     }
+
+    @ManyToMany(mappedBy = "permissions")
+    private List<Role> roles = new ArrayList<>();
 }

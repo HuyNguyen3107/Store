@@ -38,4 +38,11 @@ public class Teacher {
     protected void onUpdate() {
         updatedAt = Instant.now();
     }
+
+    @OneToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private User user;
+
+    @OneToMany(mappedBy = "teacher", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Class> classes = new ArrayList<>(); 
 }

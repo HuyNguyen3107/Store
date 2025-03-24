@@ -18,6 +18,7 @@ public class Homework {
     private String title;
 
     @NotBlank
+    @Column(columnDefinition = "TEXT")
     private String content;
 
     @NotNull
@@ -39,4 +40,11 @@ public class Homework {
     protected void onUpdate() {
         updatedAt = Instant.now();
     }
+
+    @ManyToOne
+    @JoinColumn(name = "class_id", referencedColumnName = "id")
+    private Class class;
+
+    @OneToMany(mappedBy = "homework", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Answer> answers = new ArrayList<>();
 }

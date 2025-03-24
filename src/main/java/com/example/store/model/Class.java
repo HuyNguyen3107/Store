@@ -62,5 +62,18 @@ public class Class {
         updatedAt = Instant.now();
     }
 
+    @ManyToOne
+    @JoinColumn(name = "teacher_id", referencedColumnName = "id")
+    private Teacher teacher;
+
+    @ManyToMany(mappedBy = "classes")
+    private List<Student> students = new ArrayList<>();
+
+    @OneToMany(mappedBy = "class", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Homework> homeworks = new ArrayList<>();
+
+    @ManyToOne
+    @JoinColumn(name = "course_id", referencedColumnName = "id")
+    private Course course;
 }
 

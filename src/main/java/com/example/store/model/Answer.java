@@ -14,6 +14,8 @@ public class Answer {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @Lob
+    @Column(columnDefinition = "TEXT")
     @NotBlank
     private String content;
 
@@ -40,5 +42,13 @@ public class Answer {
     protected void onUpdate() {
         updatedAt = Instant.now();
     }
+
+    @ManyToOne
+    @JoinColumn(name = "student_id", referencedColumnName = "id")
+    private Student student;
+
+    @ManyToOne
+    @JoinColumn(name = "homework_id", referencedColumnName = "id")
+    private Homework homework;
 }
 

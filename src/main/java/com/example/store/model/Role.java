@@ -31,4 +31,15 @@ public class Role {
     protected void onUpdate() {
         updatedAt = Instant.now();
     }
+
+    @ManyToMany(mappedBy = "roles")
+    private List<User> users = new ArrayList<>();
+
+    @ManyToMany
+    @JoinTable(
+        name = "roles_permissions",
+        joinColumns = @JoinColumn(name = "role_id"),
+        inverseJoinColumns = @JoinColumn(name = "permission_id")
+    )
+    private List<Permission> permissions = new ArrayList<>();
 }

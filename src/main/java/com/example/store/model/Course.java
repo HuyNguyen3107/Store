@@ -43,4 +43,10 @@ public class Course {
     protected void onUpdate() {
         updatedAt = Instant.now();
     }
+
+    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Class> classes = new ArrayList<>();
+
+    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Document> documents = new ArrayList<>();
 }

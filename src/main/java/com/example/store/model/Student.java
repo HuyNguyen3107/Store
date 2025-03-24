@@ -38,4 +38,19 @@ public class Student {
     protected void onUpdate() {
         updatedAt = Instant.now();
     }
+
+    @OneToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private User user;
+
+    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Answer> answers = new ArrayList<>();
+
+    @ManyToMany
+    @JoinTable(
+        name = "students_classes",
+        joinColumns = @JoinColumn(name = "student_id"),
+        inverseJoinColumns = @JoinColumn(name = "class_id")
+    )
+    private List<Class> classes = new ArrayList<>();
 }
