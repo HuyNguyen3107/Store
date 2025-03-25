@@ -1,3 +1,6 @@
+package com.example.store.model;
+import java.util.*;
+
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -44,11 +47,11 @@ public class Answer {
     }
 
     @ManyToOne
-    @JoinColumn(name = "student_id", referencedColumnName = "id")
+    @JoinColumn(name = "student_id", referencedColumnName = "id", insertable = false, updatable = false)
     private Student student;
 
     @ManyToOne
-    @JoinColumn(name = "homework_id", referencedColumnName = "id")
+    @JoinColumn(name = "homework_id", referencedColumnName = "id", insertable = false, updatable = false)
     private Homework homework;
 }
 

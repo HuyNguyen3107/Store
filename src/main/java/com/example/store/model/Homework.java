@@ -1,3 +1,6 @@
+package com.example.store.model;
+import java.util.*;
+
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -42,8 +45,8 @@ public class Homework {
     }
 
     @ManyToOne
-    @JoinColumn(name = "class_id", referencedColumnName = "id")
-    private Class class;
+    @JoinColumn(name = "class_id", referencedColumnName = "id", insertable = false, updatable = false)
+    private Classroom classroom;
 
     @OneToMany(mappedBy = "homework", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Answer> answers = new ArrayList<>();

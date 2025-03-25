@@ -1,4 +1,5 @@
 package com.example.store.model;
+import java.util.*;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
@@ -75,8 +76,8 @@ public class User {
     @ManyToMany
     @JoinTable(
         name = "users_roles",
-        joinColumns = @JoinColumn(name = "user_id"),
-        inverseJoinColumns = @JoinColumn(name = "role_id")
+        joinColumns = @JoinColumn(name = "user_id", insertable = false, updatable = false),
+        inverseJoinColumns = @JoinColumn(name = "role_id", insertable = false, updatable = false)
     )
     private List<Role> roles = new ArrayList<>();
 }

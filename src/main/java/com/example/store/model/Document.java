@@ -1,3 +1,6 @@
+package com.example.store.model;
+import java.util.*;
+
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -49,6 +52,6 @@ public class Document {
     }
 
     @ManyToOne
-    @JoinColumn(name = "course_id", referencedColumnName = "id")
+    @JoinColumn(name = "course_id", referencedColumnName = "id", insertable = false, updatable = false)
     private Course course;
 }

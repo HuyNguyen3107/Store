@@ -1,3 +1,6 @@
+package com.example.store.model;
+import java.util.*;
+
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -38,8 +41,8 @@ public class Role {
     @ManyToMany
     @JoinTable(
         name = "roles_permissions",
-        joinColumns = @JoinColumn(name = "role_id"),
-        inverseJoinColumns = @JoinColumn(name = "permission_id")
+        joinColumns = @JoinColumn(name = "role_id", insertable = false, updatable = false),
+        inverseJoinColumns = @JoinColumn(name = "permission_id", insertable = false, updatable = false)
     )
     private List<Permission> permissions = new ArrayList<>();
 }

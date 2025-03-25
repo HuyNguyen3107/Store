@@ -1,3 +1,6 @@
+package com.example.store.model;
+import java.util.*;
+
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -40,7 +43,7 @@ public class Student {
     }
 
     @OneToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    @JoinColumn(name = "user_id", referencedColumnName = "id", insertable = false, updatable = false)
     private User user;
 
     @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -49,8 +52,8 @@ public class Student {
     @ManyToMany
     @JoinTable(
         name = "students_classes",
-        joinColumns = @JoinColumn(name = "student_id"),
-        inverseJoinColumns = @JoinColumn(name = "class_id")
+        joinColumns = @JoinColumn(name = "student_id", insertable = false, updatable = false),
+        inverseJoinColumns = @JoinColumn(name = "class_id", insertable = false, updatable = false)
     )
-    private List<Class> classes = new ArrayList<>();
+    private List<Classroom> classrooms = new ArrayList<>();
 }

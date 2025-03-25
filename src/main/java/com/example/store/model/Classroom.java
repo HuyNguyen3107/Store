@@ -1,15 +1,16 @@
+package com.example.store.model;
+import java.util.*;
+
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import java.time.Instant;
 
-
 @Entity
-@Table(name = "classes")
+@Table(name = "classrooms")
 @Data
-
-public class Class {
+public class Classroom {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -24,7 +25,7 @@ public class Class {
     private Integer teacherId;
 
     @NotNull
-    @Column(name = "course_id")
+    @Column(name = "course_id", insertable = false, updatable = false)
     private Integer courseId;
 
     @NotNull
@@ -63,17 +64,16 @@ public class Class {
     }
 
     @ManyToOne
-    @JoinColumn(name = "teacher_id", referencedColumnName = "id")
+    @JoinColumn(name = "teacher_id", referencedColumnName = "id", insertable = false, updatable = false)
     private Teacher teacher;
 
-    @ManyToMany(mappedBy = "classes")
+    @ManyToMany(mappedBy = "classrooms")
     private List<Student> students = new ArrayList<>();
 
-    @OneToMany(mappedBy = "class", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "classroom", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Homework> homeworks = new ArrayList<>();
 
     @ManyToOne
-    @JoinColumn(name = "course_id", referencedColumnName = "id")
+    @JoinColumn(name = "course_id", referencedColumnName = "id", insertable = false, updatable = false)
     private Course course;
 }
-
