@@ -54,4 +54,20 @@ public class UserService {
     public void deleteUser(Integer id) {
         userRepository.deleteById(id);
     }
+
+    // save token
+    public void saveToken(Integer userId, String token) {
+        userRepository.findById(userId).ifPresent(user -> {
+            user.setToken(token);
+            userRepository.save(user);
+        });
+    }
+
+    // // set token
+    // public void setToken(Integer userId, String token) {
+    //     userRepository.findById(userId).ifPresent(user -> {
+    //         user.setToken(token);
+    //         userRepository.save(user);
+    //     });
+    // }
 }
