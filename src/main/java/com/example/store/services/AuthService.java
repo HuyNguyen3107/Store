@@ -18,7 +18,7 @@ public class AuthService {
         this.userRepository = userRepository;
     }
 
-    public Optional<AuthDTO> login(String email, String password) {
+    public Optional<User> login(String email, String password) {
         return userRepository.findByEmailAndPassword(email, password);
     }
 }

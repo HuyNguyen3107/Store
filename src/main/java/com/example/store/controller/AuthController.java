@@ -26,9 +26,10 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<AuthDTO> login(@Valid @RequestBody AuthDTO AuthDTO) {
-        Optional<AuthDTO> user = authService.login(AuthDTO.getEmail(), AuthDTO.getPassword());
-        System.out.println(user);
+    public ResponseEntity<User> login(@Valid @RequestBody AuthDTO AuthDTO) {
+        System.out.println("ok");
+        Optional<User> user = authService.login(AuthDTO.getEmail(), AuthDTO.getPassword());
+        System.out.println(user.isPresent());
         // if (user.isPresent()) {
         //     String token = TokenHelper.generateToken(user.get().getEmail(), user.get().getPassword());
         //     user.get().setToken(token);
@@ -37,6 +38,7 @@ public class AuthController {
         // } else {
         //     return ResponseEntity.status(401).build(); // Unauthorized
         // }
+        return ResponseEntity.ok(user.get());
     }
 }
 
