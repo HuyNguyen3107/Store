@@ -35,6 +35,56 @@ public class Document {
     @Column(name = "course_id")
     private Integer courseId;
 
+    public Document() {
+    }
+
+    public Document(String title, String description, String content, Integer courseId) {
+        this.title = title;
+        this.description = description;
+        this.content = content;
+        this.courseId = courseId;
+    }
+
+    public Integer getId() {
+        return this.id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getTitle() {
+        return this.title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getDescription() {
+        return this.description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getContent() {
+        return this.content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public Integer getCourseId() {
+        return this.courseId;
+    }
+
+    public void setCourseId(Integer courseId) {
+        this.courseId = courseId;
+    }
+
     @Column(name = "created_at", updatable = false, nullable = false)
     private Instant createdAt = Instant.now();
 

@@ -24,6 +24,39 @@ public class Teacher {
     @Column(name = "status")
     private String status;
 
+    public Teacher() {
+    }
+
+    public Teacher(Integer userId, String status) {
+        this.userId = userId;
+        this.status = status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getStatus() {
+        return this.status;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
+
+    public Integer getUserId() {
+        return this.userId;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public Integer getId() {
+        return this.id;
+    }
+
+
     @Column(name = "created_at", updatable = false, nullable = false)
     private Instant createdAt = Instant.now();
 

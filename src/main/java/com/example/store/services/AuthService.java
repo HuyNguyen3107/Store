@@ -18,15 +18,15 @@ public class AuthService {
         this.userRepository = userRepository;
     }
 
-    public Optional<User> login(String email, String password) {
+    public User login(String email, String password) {
         return userRepository.findByEmailAndPassword(email, password);
     }
 
     
     public void saveToken(int userId, String token) {
-        Optional<User> user = userRepository.findById(userId);
-        if (user.isPresent()) {
-            User existingUser = user.get();
+        User user = userRepository.findById(userId);
+        if (user != null) {
+            User existingUser = user;
             existingUser.setToken(token);
             userRepository.save(existingUser);
         }

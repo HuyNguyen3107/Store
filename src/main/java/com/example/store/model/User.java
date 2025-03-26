@@ -42,6 +42,82 @@ public class User {
     @Size(max = 200)
     private String address;
 
+    public User() {
+    }
+
+    public User(String name, String email, String password, String status, String token, String phone, String address) {
+        this.name = name;
+        this.email = email;
+        this.password = password;
+        this.status = status;
+        this.token = token;
+        this.phone = phone;
+        this.address = address;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getPassword() {
+        return this.password;
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getEmail() {
+        return this.email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+    public String getStatus() {
+        return this.status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getToken() {
+        return this.token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    public String getPhone() {
+        return this.phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getAddress() {
+        return this.address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public Integer getId() {
+        return this.id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
     @Column(name = "created_at", updatable = false, nullable = false)
     private Instant createdAt = Instant.now();
 

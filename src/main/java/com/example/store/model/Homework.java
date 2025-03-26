@@ -28,6 +28,47 @@ public class Homework {
     @Column(name = "class_id")
     private Integer classId;
 
+    public Homework() {
+    }
+
+    public Homework(String title, String content, Integer classId) {
+        this.title = title;
+        this.content = content;
+        this.classId = classId;
+    }
+
+    public Integer getId() {
+        return this.id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getTitle() {
+        return this.title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getContent() {
+        return this.content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public Integer getClassId() {
+        return this.classId;
+    }
+
+    public void setClassId(Integer classId) {
+        this.classId = classId;
+    }
+
     @Column(name = "created_at", updatable = false, nullable = false)
     private Instant createdAt = Instant.now();
 

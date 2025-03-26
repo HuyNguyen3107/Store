@@ -47,6 +47,83 @@ public class Classroom {
     @Column(name = "schedule")
     private String schedule;
 
+    public Classroom() {
+    }
+
+    public Classroom(String name, Integer teacherId, Integer courseId, Integer studentNumber, String startDay, String endDay, String schedule) {
+        this.name = name;
+        this.teacherId = teacherId;
+        this.courseId = courseId;
+        this.studentNumber = studentNumber;
+        this.startDay = startDay;
+        this.endDay = endDay;
+        this.schedule = schedule;
+    }
+
+    public Integer getId() {
+        return this.id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Integer getTeacherId() {
+        return this.teacherId;
+    }
+
+    public void setTeacherId(Integer teacherId) {
+        this.teacherId = teacherId;
+    }
+
+    public Integer getCourseId() {
+        return this.courseId;
+    }
+
+    public void setCourseId(Integer courseId) {
+        this.courseId = courseId;
+    }
+
+    public Integer getStudentNumber() {
+        return this.studentNumber;
+    }
+
+    public void setStudentNumber(Integer studentNumber) {
+        this.studentNumber = studentNumber;
+    }
+
+    public String getStartDay() {
+        return this.startDay;
+    }
+
+    public void setStartDay(String startDay) {
+        this.startDay = startDay;
+    }
+
+    public String getEndDay() {
+        return this.endDay;
+    }
+
+    public void setEndDay(String endDay) {
+        this.endDay = endDay;
+    }
+
+    public String getSchedule() {
+        return this.schedule;
+    }
+
+    public void setSchedule(String schedule) {
+        this.schedule = schedule;
+    }
+
     @Column(name = "created_at", updatable = false, nullable = false)
     private Instant createdAt = Instant.now();
 

@@ -21,6 +21,30 @@ public class Permission {
     @Size(max = 100)
     private String value;
 
+    public Permission() {
+    }
+
+    public Permission(String value) {
+        this.value = value;
+    }
+
+    public Integer getId() {
+        return this.id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getValue() {
+        return this.value;
+    }
+
+    public void setValue(String value) {
+        this.value = value;
+    }
+
+
     @Column(name = "created_at", updatable = false, nullable = false)
     private Instant createdAt = Instant.now();
 

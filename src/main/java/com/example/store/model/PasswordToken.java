@@ -29,6 +29,45 @@ public class PasswordToken {
     @Column(name = "user_id", insertable = false, updatable = false)
     private Integer userId;
 
+    public PasswordToken(String resetToken, String expired, Integer userId) {
+        this.resetToken = resetToken;
+        this.expired = expired;
+        this.userId = userId;
+    }
+
+    public void setResetToken(String resetToken) {
+        this.resetToken = resetToken;
+    }
+
+    public String getResetToken() {
+        return this.resetToken;
+    }
+
+    public void setExpired(String expired) {
+        this.expired = expired;
+    }
+
+    public String getExpired() {
+        return this.expired;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
+
+    public Integer getUserId() {
+        return this.userId;
+    }
+
+    public Integer getId() {
+        return this.id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+
     @Column(name = "created_at", updatable = false, nullable = false)
     private Instant createdAt = Instant.now();
 

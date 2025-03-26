@@ -26,6 +26,38 @@ public class Student {
     @Column(name = "status")
     private String status;
 
+    public Student() {
+    }
+
+    public Student(Integer userId, String status) {
+        this.userId = userId;
+        this.status = status;
+    }
+
+    public Integer getUserId() {
+        return this.userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
+
+    public String getStatus() {
+        return this.status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public Integer getId() {
+        return this.id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
     @Column(name = "created_at", updatable = false, nullable = false)
     private Instant createdAt = Instant.now();
 

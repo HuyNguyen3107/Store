@@ -31,6 +31,47 @@ public class Course {
     @Column(name = "lesson_number")
     private Integer lessonNumber;
 
+    public Course() {
+    }
+
+    public Course(String name, String price, Integer lessonNumber) {
+        this.name = name;
+        this.price = price;
+        this.lessonNumber = lessonNumber;
+    }
+
+    public Integer getId() {
+        return this.id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getPrice() {
+        return this.price;
+    }
+
+    public void setPrice(String price) {
+        this.price = price;
+    }
+
+    public Integer getLessonNumber() {
+        return this.lessonNumber;
+    }
+
+    public void setLessonNumber(Integer lessonNumber) {
+        this.lessonNumber = lessonNumber;
+    }
+
     @Column(name = "created_at", updatable = false, nullable = false)
     private Instant createdAt = Instant.now();
 

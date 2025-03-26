@@ -18,20 +18,38 @@ import java.util.Optional;
 public class AuthController {
     private final UserService userService;
     private final AuthService authService;
+    private final PasswordTokenService passwordTokenService;
+    private final UserOTPService userOTPService;
 
     @Autowired
-    public AuthController(UserService userService, AuthService authService) {
+    public AuthController(UserService userService, AuthService authService, 
+                          PasswordTokenService passwordTokenService, UserOTPService userOTPService) {
         this.userService = userService;
         this.authService = authService;
+        this.passwordTokenService = passwordTokenService;
+        this.userOTPService = userOTPService;
     }
 
     @PostMapping("/login")
     public ResponseEntity<User> login(@Valid @RequestBody AuthDTO AuthDTO) {
-        Optional<User> user = authService.login(AuthDTO.getEmail(), AuthDTO.getPassword());
-        if (user.isPresent()) {
+        User user = authService.login(AuthDTO.getEmail(), AuthDTO.getPassword());
+        if (user == null) {
+            return ResponseEntity.status(401).build(); 
+        }
+        if (user != null) {
             String token = TokenHelper.generateToken();
-            userService.saveToken(user.get().getId(), token);
-            return ResponseEntity.ok(user.get());
+            userService.saveToken(user.getId(), token);
+            // generate OTP with 6 number and save to userOTPService 
+            String otp = Math.random() * 1000000 + "";
+            otp = otp.substring(0, 6);
+            UserOTP userOTP = new UserOTP(otp, (System.currentTimeMillis() + 5 * 60 * 1000) + "", user.getId());
+            if (userOTPService.getOTPByUserId(user.getId()) != null) {
+                userOTPService.updateOTPByUserId(user.getId(), otp);
+            } else {
+                userOTPService.addOTP(userOTP);
+            }
+            // send email with OTP to user
+            return ResponseEntity.ok(user);
         } else {
             return ResponseEntity.status(401).build(); 
         }
@@ -40,12 +58,12 @@ public class AuthController {
     @PostMapping("/logout")
     public ResponseEntity<Void> logout(@RequestHeader("Authorization") String token) {
         token = token.substring(7); 
-        Optional<User> user = userService.getUserByToken(token);
-        if (user.isEmpty()) {
+        User user = userService.getUserByToken(token);
+        if (user == null) {
             return ResponseEntity.status(401).build(); 
         }
-        if (TokenHelper.validateToken(user.get().getToken() ,token)) {
-            authService.saveToken(user.get().getId(), null); 
+        if (TokenHelper.validateToken(user.getToken() ,token)) {
+            authService.saveToken(user.getId(), null); 
             return ResponseEntity.ok().build();
         } else {
             return ResponseEntity.status(401).build(); 
@@ -57,16 +75,101 @@ public class AuthController {
         if (email == null || email.isEmpty()) {
             return ResponseEntity.badRequest().build(); 
         }
-        Optional<User> user = userService.getUserByEmail(email);
-        if (user.isPresent()) {
+        User user = userService.getUserByEmail(email);
+        if (user != null) {
             String token = TokenHelper.generateToken();
-            userService.saveToken(user.get().getId(), token);
+            // send email with token to user
+            // get millisecond at this time and add 5 minutes to it
+            String expirationTime = (System.currentTimeMillis() + 5 * 60 * 1000) + "";
+            PasswordToken passwordToken = new PasswordToken(token, expirationTime, user.getId());
+
+            PasswordToken existingToken = passwordTokenService.findByUserId(user.getId());
+            if (existingToken != null) {
+                passwordTokenService.updateTokenByUserId(user.getId(), token);
+            } else {
+                passwordTokenService.addToken(passwordToken);
+            }
             return ResponseEntity.ok().build();
         } else {
             return ResponseEntity.status(404).build(); 
         }
     }
 
+    @GetMapping("/reset-password")
+    public ResponseEntity<String> resetPassword(@RequestBody String token, @RequestBody String userId) {
+        if (token == null || token.isEmpty() || userId == null || userId.isEmpty()) {
+            return ResponseEntity.badRequest().build(); 
+        }
+        PasswordToken passwordToken = passwordTokenService.findByUserId(Integer.parseInt(userId));
+        if (passwordToken != null && passwordToken.getResetToken().equals(token)) {
+            long currentTime = System.currentTimeMillis();
+            if (Integer.parseInt(passwordToken.getExpired()) > currentTime) {
+                return ResponseEntity.ok().body("OK");
+            } else {
+                return ResponseEntity.status(400).body("Token expired"); 
+            }
+        } else {
+            return ResponseEntity.status(404).body("Not Found"); 
+        }
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<Void> changePassword(@RequestBody String userId, @RequestBody String newPassword, @RequestBody String token) {
+        if (token == null || token.isEmpty()) {
+            return ResponseEntity.badRequest().build(); 
+        }
+        if (userId == null || userId.isEmpty() || newPassword == null || newPassword.isEmpty()) {
+            return ResponseEntity.badRequest().build(); 
+        }
+        PasswordToken passwordToken = passwordTokenService.getByUserIdAndToken(Integer.parseInt(userId), token);
+
+        if (passwordToken == null) {
+            return ResponseEntity.status(404).build(); 
+        }
+        User user = userService.getUserById(Integer.parseInt(userId));
+        if (user != null) {
+            userService.updatePassword(user.getId(), newPassword);
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.status(404).build(); 
+        }
+    }
+
+    @PostMapping("change-password")
+    public ResponseEntity<Void> changePassword(@RequestHeader("Authorization") String token, @RequestBody String newPassword) {
+        if (token == null || token.isEmpty()) {
+            return ResponseEntity.badRequest().build(); 
+        }
+        if (newPassword == null || newPassword.isEmpty()) {
+            return ResponseEntity.badRequest().build(); 
+        }
+        token = token.substring(7);
+        User user = userService.getUserByToken(token);
+        if (user != null) {
+            userService.updatePassword(user.getId(), newPassword);
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.status(404).build(); 
+        }
+    }
+
+    @PostMapping("/verify-otp")
+    public ResponseEntity<String> verifyOTP(@RequestBody String otp) {
+        if (otp == null || otp.isEmpty()) {
+            return ResponseEntity.badRequest().build(); 
+        }
+        UserOTP userOTP = userOTPService.getByOTP(otp);
+        if (userOTP != null) {
+            long currentTime = System.currentTimeMillis();
+            if (Long.parseLong(userOTP.getExpired()) > currentTime) {
+                return ResponseEntity.ok().body("OK");
+            } else {
+                return ResponseEntity.status(400).body("OTP expired"); 
+            }
+        } else {
+            return ResponseEntity.status(404).body("Not Found"); 
+        }
+    }
 }
 
  

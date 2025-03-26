@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class UserService {
@@ -23,12 +22,12 @@ public class UserService {
     }
 
     // Lấy user theo ID
-    public Optional<User> getUserById(Integer id) {
+    public User getUserById(Integer id) {
         return userRepository.findById(id);
     }
 
     // Lấy user theo Email
-    public Optional<User> getUserByEmail(String email) {
+    public User getUserByEmail(String email) {
         return userRepository.findByEmail(email);
     }
 
@@ -38,17 +37,17 @@ public class UserService {
     }
 
     // Cập nhật user
-    public Optional<User> updateUser(Integer id, User newUserData) {
-        return userRepository.findById(id).map(user -> {
-            user.setName(newUserData.getName());
-            user.setEmail(newUserData.getEmail());
-            user.setPhone(newUserData.getPhone());
-            user.setAddress(newUserData.getAddress());
-            user.setStatus(newUserData.getStatus());
-            user.setToken(newUserData.getToken());
-            return userRepository.save(user);
-        });
-    }
+    // public User updateUser(Integer id, User newUserData) {
+    //     return userRepository.findById(id).map(user -> {
+    //         user.setName(newUserData.getName());
+    //         user.setEmail(newUserData.getEmail());
+    //         user.setPhone(newUserData.getPhone());
+    //         user.setAddress(newUserData.getAddress());
+    //         user.setStatus(newUserData.getStatus());
+    //         user.setToken(newUserData.getToken());
+    //         return userRepository.save(user);
+    //     });
+    // }
 
     // Xóa user
     public void deleteUser(Integer id) {
@@ -57,21 +56,22 @@ public class UserService {
 
     // save token
     public void saveToken(Integer userId, String token) {
-        userRepository.findById(userId).ifPresent(user -> {
+        User user = userRepository.findById(userId);
+        if (user != null) {
             user.setToken(token);
             userRepository.save(user);
-        });
+        }
     }
 
-    public Optional<User> getUserByToken(String token) {
+    public User getUserByToken(String token) {
         return userRepository.findByToken(token);
     }
 
-    // // set token
-    // public void setToken(Integer userId, String token) {
-    //     userRepository.findById(userId).ifPresent(user -> {
-    //         user.setToken(token);
-    //         userRepository.save(user);
-    //     });
-    // }
+    public void updatePassword(Integer userId, String newPassword) {
+        User user = userRepository.findById(userId);
+        if (user != null) {
+            user.setPassword(newPassword);
+            userRepository.save(user);
+        }
+    }
 }

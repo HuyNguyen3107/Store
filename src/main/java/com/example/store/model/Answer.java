@@ -30,6 +30,48 @@ public class Answer {
     @Column(name = "homework_id")
     private Integer homeworkId;
 
+    public Answer() {
+    }
+
+    public Answer(String content, Integer studentId, Integer homeworkId) {
+        this.content = content;
+        this.studentId = studentId;
+        this.homeworkId = homeworkId;
+    }
+
+    public Integer getId() {
+        return this.id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getContent() {
+        return this.content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public Integer getStudentId() {
+        return this.studentId;
+    }
+
+    public void setStudentId(Integer studentId) {
+        this.studentId = studentId;
+    }
+
+    public Integer getHomeworkId() {
+        return this.homeworkId;
+    }
+
+    public void setHomeworkId(Integer homeworkId) {
+        this.homeworkId = homeworkId;
+    }
+
+
     @Column(name = "created_at", updatable = false, nullable = false)
     private Instant createdAt = Instant.now();
 

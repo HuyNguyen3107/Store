@@ -29,6 +29,46 @@ public class UserOTP {
     @Column(name = "user_id")
     private Integer userId;
 
+    public UserOTP() {
+    }
+    public UserOTP(String otp, String expired, Integer userId) {
+        this.otp = otp;
+        this.expired = expired;
+        this.userId = userId;
+    }
+
+    public String getExpired() {
+        return this.expired;
+    }
+
+    public void setExpired(String expired) {
+        this.expired = expired;
+    }
+
+    public String getOtp() {
+        return this.otp;
+    }
+
+    public void setOtp(String otp) {
+        this.otp = otp;
+    }
+
+    public Integer getUserId() {
+        return this.userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
+
+    public Integer getId() {
+        return this.id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
     @Column(name = "created_at", updatable = false, nullable = false)
     private Instant createdAt = Instant.now();
 
