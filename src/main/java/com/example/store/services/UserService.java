@@ -63,6 +63,10 @@ public class UserService {
         });
     }
 
+    public Optional<User> getUserByToken(String token) {
+        return userRepository.findByToken(token);
+    }
+
     // // set token
     // public void setToken(Integer userId, String token) {
     //     userRepository.findById(userId).ifPresent(user -> {

@@ -27,18 +27,46 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<User> login(@Valid @RequestBody AuthDTO AuthDTO) {
-        System.out.println("ok");
         Optional<User> user = authService.login(AuthDTO.getEmail(), AuthDTO.getPassword());
-        System.out.println(user.isPresent());
-        // if (user.isPresent()) {
-        //     String token = TokenHelper.generateToken(user.get().getEmail(), user.get().getPassword());
-        //     user.get().setToken(token);
-        //     userService.saveToken(user.get().getId(), token);
-        //     return ResponseEntity.ok(user.get());
-        // } else {
-        //     return ResponseEntity.status(401).build(); // Unauthorized
-        // }
-        return ResponseEntity.ok(user.get());
+        if (user.isPresent()) {
+            String token = TokenHelper.generateToken();
+            userService.saveToken(user.get().getId(), token);
+            return ResponseEntity.ok(user.get());
+        } else {
+            return ResponseEntity.status(401).build(); 
+        }
     }
+
+    @PostMapping("/logout")
+    public ResponseEntity<Void> logout(@RequestHeader("Authorization") String token) {
+        token = token.substring(7); 
+        Optional<User> user = userService.getUserByToken(token);
+        if (user.isEmpty()) {
+            return ResponseEntity.status(401).build(); 
+        }
+        if (TokenHelper.validateToken(user.get().getToken() ,token)) {
+            authService.saveToken(user.get().getId(), null); 
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.status(401).build(); 
+        }
+    }
+
+    @PostMapping("/forgot-password")
+    public ResponseEntity<Void> forgotPassword(@RequestBody String email) {
+        if (email == null || email.isEmpty()) {
+            return ResponseEntity.badRequest().build(); 
+        }
+        Optional<User> user = userService.getUserByEmail(email);
+        if (user.isPresent()) {
+            String token = TokenHelper.generateToken();
+            userService.saveToken(user.get().getId(), token);
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.status(404).build(); 
+        }
+    }
+
 }
 
+ 

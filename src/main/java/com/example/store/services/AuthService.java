@@ -21,4 +21,14 @@ public class AuthService {
     public Optional<User> login(String email, String password) {
         return userRepository.findByEmailAndPassword(email, password);
     }
+
+    
+    public void saveToken(int userId, String token) {
+        Optional<User> user = userRepository.findById(userId);
+        if (user.isPresent()) {
+            User existingUser = user.get();
+            existingUser.setToken(token);
+            userRepository.save(existingUser);
+        }
+    }
 }
