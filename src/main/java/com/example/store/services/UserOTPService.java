@@ -35,8 +35,8 @@ public class UserOTPService {
     // update OTP by user id
     public void updateOTPByUserId(Integer userId, String otp) {
         UserOTP userOTP = userOTPRepository.findByUserId(userId);
-        if (userOTP.isPresent()) {
-            UserOTP existingUserOTP = userOTP.get();
+        if (userOTP != null) {
+            UserOTP existingUserOTP = userOTP;
             existingUserOTP.setOtp(otp);
             userOTPRepository.save(existingUserOTP);
         }

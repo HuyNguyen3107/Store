@@ -9,7 +9,7 @@ import java.util.Optional;
 
 @Repository
 public interface PasswordTokenRepository extends JpaRepository<PasswordToken, Integer> {
-    PasswordToken findByUserId(String userId);
+    PasswordToken findByUserId(Integer userId);
 
     PasswordToken findByUserIdAndResetToken(Integer userId, String token);
 }

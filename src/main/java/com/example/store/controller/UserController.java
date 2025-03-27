@@ -26,20 +26,20 @@ public class UserController {
     }
 
     // API lấy User theo ID
-    @GetMapping("/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable Integer id) {
-        return userService.getUserById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
-    }
+    // @GetMapping("/{id}")
+    // public ResponseEntity<User> getUserById(@PathVariable Integer id) {
+    //     return userService.getUserById(id)
+    //             .map(ResponseEntity::ok)
+    //             .orElse(ResponseEntity.notFound().build());
+    // }
 
     // API lấy User theo Email
-    @GetMapping("/email/{email}")
-    public ResponseEntity<User> getUserByEmail(@PathVariable String email) {
-        return userService.getUserByEmail(email)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
-    }
+    // @GetMapping("/email/{email}")
+    // public ResponseEntity<User> getUserByEmail(@PathVariable String email) {
+    //     return userService.getUserByEmail(email)
+    //             .map(ResponseEntity::ok)
+    //             .orElse(ResponseEntity.notFound().build());
+    // }
 
     // API tạo User mới
     @PostMapping
@@ -48,12 +48,12 @@ public class UserController {
     }
 
     // API cập nhật User
-    @PutMapping("/{id}")
-    public ResponseEntity<User> updateUser(@PathVariable Integer id, @RequestBody User user) {
-        return userService.updateUser(id, user)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
-    }
+    // @PutMapping("/{id}")
+    // public ResponseEntity<User> updateUser(@PathVariable Integer id, @RequestBody User user) {
+    //     return userService.updateUser(id, user)
+    //             .map(ResponseEntity::ok)
+    //             .orElse(ResponseEntity.notFound().build());
+    // }
 
     // API xóa User
     @DeleteMapping("/{id}")
