@@ -26,8 +26,11 @@ public class PasswordToken {
     private String expired;
 
     @NotNull
-    @Column(name = "user_id", insertable = false, updatable = false)
+    @Column(name = "user_id")
     private Integer userId;
+
+    public PasswordToken() {
+    }
 
     public PasswordToken(String resetToken, String expired, Integer userId) {
         this.resetToken = resetToken;

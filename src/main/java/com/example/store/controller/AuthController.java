@@ -84,7 +84,6 @@ public class AuthController {
             String token = TokenHelper.generateToken();
             String expirationTime = (System.currentTimeMillis() + 5 * 60 * 1000) + "";
             PasswordToken passwordToken = new PasswordToken(token, expirationTime, user.getId());
-
             PasswordToken existingToken = passwordTokenService.findByUserId(user.getId());
             if (existingToken != null) {
                 passwordTokenService.updateTokenByUserId(user.getId(), token, expirationTime);
@@ -99,11 +98,15 @@ public class AuthController {
     }
 
     @GetMapping("/reset-password")
-    public ResponseEntity<String> resetPassword(@RequestParam String token, @RequestParam String userId) {
+    public ResponseEntity<String> resetPassword(@RequestParam String token, @RequestParam String id) {
+        String userId = id;
         if (token == null || token.isEmpty() || userId == null || userId.isEmpty()) {
             return ResponseEntity.badRequest().build(); 
         }
+        System.out.println("Token: " + token);
+        System.out.println("UserId: " + userId);
         PasswordToken passwordToken = passwordTokenService.findByUserId(Integer.parseInt(userId));
+        System.out.println("PasswordToken: " + passwordToken);
         if (passwordToken != null && passwordToken.getResetToken().equals(token)) {
             long currentTime = System.currentTimeMillis();
             if (Integer.parseInt(passwordToken.getExpired()) > currentTime) {
