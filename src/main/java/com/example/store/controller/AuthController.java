@@ -117,7 +117,10 @@ public class AuthController {
     }
 
     @PostMapping("/reset-password")
-    public ResponseEntity<Void> changePassword(@RequestBody String userId, @RequestBody String newPassword, @RequestBody String token) {
+    public ResponseEntity<Void> changePassword(@RequestBody ResetPwDTO resetPwDTO) {
+        String token = resetPwDTO.getToken();
+        String userId = resetPwDTO.getUserId();
+        String newPassword = resetPwDTO.getPassword();
         if (token == null || token.isEmpty()) {
             return ResponseEntity.badRequest().build(); 
         }
