@@ -41,5 +41,11 @@ public class UserOTPService {
             userOTPRepository.save(existingUserOTP);
         }
     }
-       
+    
+    public void deleteOTPByUserId(Integer userId) {
+        UserOTP userOTP = userOTPRepository.findByUserId(userId);
+        if (userOTP != null) {
+            userOTPRepository.delete(userOTP);
+        }
+    }
 }

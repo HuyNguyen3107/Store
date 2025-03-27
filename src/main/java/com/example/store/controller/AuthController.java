@@ -31,7 +31,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<User> login(@Valid @RequestBody AuthDTO AuthDTO) {
+    public ResponseEntity<Void> login(@Valid @RequestBody AuthDTO AuthDTO) {
         User user = authService.login(AuthDTO.getEmail(), AuthDTO.getPassword());
         if (user == null) {
             return ResponseEntity.status(401).build(); 
@@ -49,7 +49,7 @@ public class AuthController {
                 userOTPService.addOTP(userOTP);
             }
             // send email with OTP to user
-            return ResponseEntity.ok(user);
+            return ResponseEntity.ok().build(); 
         } else {
             return ResponseEntity.status(401).build(); 
         }
@@ -154,20 +154,26 @@ public class AuthController {
     }
 
     @PostMapping("/verify-otp")
-    public ResponseEntity<String> verifyOTP(@RequestBody String otp) {
+    public ResponseEntity<User> verifyOTP(@RequestBody String otp) {
         if (otp == null || otp.isEmpty()) {
-            return ResponseEntity.badRequest().build(); 
+            return ResponseEntity.status(400).build(); 
         }
         UserOTP userOTP = userOTPService.getByOTP(otp);
         if (userOTP != null) {
             long currentTime = System.currentTimeMillis();
             if (Long.parseLong(userOTP.getExpired()) > currentTime) {
-                return ResponseEntity.ok().body("OK");
+                User user = userService.getUserById(userOTP.getUserId());
+                if (user != null) {
+                    userOTPService.deleteOTPByUserId(user.getId());
+                    return ResponseEntity.ok(user); 
+                } else {
+                    return ResponseEntity.status(404).build(); 
+                }
             } else {
-                return ResponseEntity.status(400).body("OTP expired"); 
+                return ResponseEntity.status(400).build();
             }
         } else {
-            return ResponseEntity.status(404).body("Not Found"); 
+            return ResponseEntity.status(404).build(); 
         }
     }
 }
