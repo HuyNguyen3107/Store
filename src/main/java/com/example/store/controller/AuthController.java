@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.validation.annotation.Validated;
-import com.example.store.dto.AuthDTO;
+import com.example.store.dto.*;
 import jakarta.validation.Valid;
 import java.util.List;
 import java.util.Optional;
@@ -20,10 +20,12 @@ public class AuthController {
     private final AuthService authService;
     private final PasswordTokenService passwordTokenService;
     private final UserOTPService userOTPService;
+    private final EmailService emailService;
 
     @Autowired
     public AuthController(UserService userService, AuthService authService, 
-                          PasswordTokenService passwordTokenService, UserOTPService userOTPService) {
+                          PasswordTokenService passwordTokenService, UserOTPService userOTPService, EmailService emailService) {
+        this.emailService = emailService;
         this.userService = userService;
         this.authService = authService;
         this.passwordTokenService = passwordTokenService;
@@ -48,7 +50,7 @@ public class AuthController {
             } else {
                 userOTPService.addOTP(userOTP);
             }
-            // send email with OTP to user
+            emailService.sendEmail("levi2k3ds@gmail.com", "OTP Code to login", "Your OTP code is: " + otp);
             return ResponseEntity.ok().build(); 
         } else {
             return ResponseEntity.status(401).build(); 
@@ -154,7 +156,9 @@ public class AuthController {
     }
 
     @PostMapping("/verify-otp")
-    public ResponseEntity<User> verifyOTP(@RequestBody String otp) {
+    public ResponseEntity<User> verifyOTP(@Valid @RequestBody OtpDTO otpDTO) {
+        String otp = otpDTO.getOtp();
+        System.out.println("OTP: " + otp);
         if (otp == null || otp.isEmpty()) {
             return ResponseEntity.status(400).build(); 
         }
@@ -170,6 +174,7 @@ public class AuthController {
                     return ResponseEntity.status(404).build(); 
                 }
             } else {
+                System.out.println("OTP expired");
                 return ResponseEntity.status(400).build();
             }
         } else {
