@@ -34,6 +34,6 @@ public class PasswordTokenService {
     }
 
     public PasswordToken findByUserId(Integer userId) {
-        return passwordTokenRepository.findByUserId(userId).orElse(null);
+        return passwordTokenRepository.findByUserId(userId);
     }
 }

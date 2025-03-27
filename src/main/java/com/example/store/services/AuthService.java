@@ -24,7 +24,7 @@ public class AuthService {
 
     
     public void saveToken(int userId, String token) {
-        User user = userRepository.findById(userId);
+        User user = userRepository.findUserById(userId);
         if (user != null) {
             User existingUser = user;
             existingUser.setToken(token);

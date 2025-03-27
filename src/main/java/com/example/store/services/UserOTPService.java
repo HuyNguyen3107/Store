@@ -24,7 +24,7 @@ public class UserOTPService {
 
     // getByOTP
     public UserOTP getByOTP(String otp) {
-        return userOTPRepository.findByOtp(otp).orElse(null);
+        return userOTPRepository.findByOtp(otp);
     } 
 
     // add OTP

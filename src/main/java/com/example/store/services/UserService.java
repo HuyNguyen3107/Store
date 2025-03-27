@@ -23,7 +23,7 @@ public class UserService {
 
     // Lấy user theo ID
     public User getUserById(Integer id) {
-        return userRepository.findById(id);
+        return userRepository.findUserById(id);
     }
 
     // Lấy user theo Email
@@ -56,7 +56,7 @@ public class UserService {
 
     // save token
     public void saveToken(Integer userId, String token) {
-        User user = userRepository.findById(userId);
+        User user = userRepository.findUserById(userId);
         if (user != null) {
             user.setToken(token);
             userRepository.save(user);
@@ -68,7 +68,7 @@ public class UserService {
     }
 
     public void updatePassword(Integer userId, String newPassword) {
-        User user = userRepository.findById(userId);
+        User user = userRepository.findUserById(userId);
         if (user != null) {
             user.setPassword(newPassword);
             userRepository.save(user);
