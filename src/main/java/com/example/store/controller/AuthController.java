@@ -44,9 +44,10 @@ public class AuthController {
             // generate OTP with 6 number and save to userOTPService 
             String otp = Math.random() * 1000000 + "";
             otp = otp.substring(0, 6);
-            UserOTP userOTP = new UserOTP(otp, (System.currentTimeMillis() + 5 * 60 * 1000) + "", user.getId());
+            String expirationTime = (System.currentTimeMillis() + 5 * 60 * 1000) + ""; // 5 minutes
+            UserOTP userOTP = new UserOTP(otp, expirationTime, user.getId());
             if (userOTPService.getOTPByUserId(user.getId()) != null) {
-                userOTPService.updateOTPByUserId(user.getId(), otp);
+                userOTPService.updateOTPByUserId(user.getId(), otp, expirationTime);
             } else {
                 userOTPService.addOTP(userOTP);
             }
@@ -73,24 +74,24 @@ public class AuthController {
     }
 
     @PostMapping("/forgot-password")
-    public ResponseEntity<Void> forgotPassword(@RequestBody String email) {
+    public ResponseEntity<Void> forgotPassword(@Valid @RequestBody EmailDTO emailDTO) {
+        String email = emailDTO.getEmail();
         if (email == null || email.isEmpty()) {
             return ResponseEntity.badRequest().build(); 
         }
         User user = userService.getUserByEmail(email);
         if (user != null) {
             String token = TokenHelper.generateToken();
-            // send email with token to user
-            // get millisecond at this time and add 5 minutes to it
             String expirationTime = (System.currentTimeMillis() + 5 * 60 * 1000) + "";
             PasswordToken passwordToken = new PasswordToken(token, expirationTime, user.getId());
 
             PasswordToken existingToken = passwordTokenService.findByUserId(user.getId());
             if (existingToken != null) {
-                passwordTokenService.updateTokenByUserId(user.getId(), token);
+                passwordTokenService.updateTokenByUserId(user.getId(), token, expirationTime);
             } else {
                 passwordTokenService.addToken(passwordToken);
             }
+            emailService.sendEmail(email, "Password Reset", "Your password reset token is: " + token);
             return ResponseEntity.ok().build();
         } else {
             return ResponseEntity.status(404).build(); 
@@ -98,7 +99,7 @@ public class AuthController {
     }
 
     @GetMapping("/reset-password")
-    public ResponseEntity<String> resetPassword(@RequestBody String token, @RequestBody String userId) {
+    public ResponseEntity<String> resetPassword(@RequestParam String token, @RequestParam String userId) {
         if (token == null || token.isEmpty() || userId == null || userId.isEmpty()) {
             return ResponseEntity.badRequest().build(); 
         }
@@ -158,13 +159,14 @@ public class AuthController {
     @PostMapping("/verify-otp")
     public ResponseEntity<User> verifyOTP(@Valid @RequestBody OtpDTO otpDTO) {
         String otp = otpDTO.getOtp();
-        System.out.println("OTP: " + otp);
         if (otp == null || otp.isEmpty()) {
             return ResponseEntity.status(400).build(); 
         }
         UserOTP userOTP = userOTPService.getByOTP(otp);
         if (userOTP != null) {
             long currentTime = System.currentTimeMillis();
+            System.out.println("Current time: " + currentTime); 
+            System.out.println("Expired time: " + userOTP.getExpired());
             if (Long.parseLong(userOTP.getExpired()) > currentTime) {
                 User user = userService.getUserById(userOTP.getUserId());
                 if (user != null) {
@@ -174,7 +176,6 @@ public class AuthController {
                     return ResponseEntity.status(404).build(); 
                 }
             } else {
-                System.out.println("OTP expired");
                 return ResponseEntity.status(400).build();
             }
         } else {

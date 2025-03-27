@@ -21,10 +21,11 @@ public class PasswordTokenService {
         passwordTokenRepository.save(passwordToken);
     }
 
-    public void updateTokenByUserId(Integer userId, String token) {
+    public void updateTokenByUserId(Integer userId, String token, String expirationTime) {
         PasswordToken passwordToken = passwordTokenRepository.findByUserId(userId);
         if (passwordToken != null) {
             passwordToken.setResetToken(token);
+            passwordToken.setExpired(expirationTime);
             passwordTokenRepository.save(passwordToken);
         }
     }

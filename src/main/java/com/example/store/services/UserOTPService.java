@@ -33,11 +33,12 @@ public class UserOTPService {
     }
 
     // update OTP by user id
-    public void updateOTPByUserId(Integer userId, String otp) {
+    public void updateOTPByUserId(Integer userId, String otp, String expirationTime) {
         UserOTP userOTP = userOTPRepository.findByUserId(userId);
         if (userOTP != null) {
             UserOTP existingUserOTP = userOTP;
             existingUserOTP.setOtp(otp);
+            existingUserOTP.setExpired(expirationTime);
             userOTPRepository.save(existingUserOTP);
         }
     }
