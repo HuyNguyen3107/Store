@@ -21,44 +21,20 @@ public class UserController {
 
     // API lấy danh sách Users
     @GetMapping
-    public List<User> getAllUsers() {
-        return userService.getAllUsers();
+    public ResponseEntity<List<User>> getAllUsers() {
+         List<User> users = userService.getAllUsers();
+         return ResponseEntity.ok(users);
     }
 
-    // API lấy User theo ID
-    // @GetMapping("/{id}")
-    // public ResponseEntity<User> getUserById(@PathVariable Integer id) {
-    //     return userService.getUserById(id)
-    //             .map(ResponseEntity::ok)
-    //             .orElse(ResponseEntity.notFound().build());
-    // }
-
-    // API lấy User theo Email
-    // @GetMapping("/email/{email}")
-    // public ResponseEntity<User> getUserByEmail(@PathVariable String email) {
-    //     return userService.getUserByEmail(email)
-    //             .map(ResponseEntity::ok)
-    //             .orElse(ResponseEntity.notFound().build());
-    // }
-
-    // API tạo User mới
-    @PostMapping
-    public ResponseEntity<User> createUser(@RequestBody User user) {
-        return ResponseEntity.ok(userService.createUser(user));
+    // API lấy thông tin User theo ID
+    @GetMapping("/{id}")
+    public ResponseEntity<User> getUserById(@RequestHeader("Authorization") String token, @PathVariable Integer id) {
+        User user = userService.getUserById(id);
+        if (user != null) {
+            return ResponseEntity.ok(user);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
-
-    // API cập nhật User
-    // @PutMapping("/{id}")
-    // public ResponseEntity<User> updateUser(@PathVariable Integer id, @RequestBody User user) {
-    //     return userService.updateUser(id, user)
-    //             .map(ResponseEntity::ok)
-    //             .orElse(ResponseEntity.notFound().build());
-    // }
-
-    // API xóa User
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteUser(@PathVariable Integer id) {
-        userService.deleteUser(id);
-        return ResponseEntity.noContent().build();
-    }
+    
 }
