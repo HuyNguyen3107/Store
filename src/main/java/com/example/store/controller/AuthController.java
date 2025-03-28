@@ -103,13 +103,10 @@ public class AuthController {
         if (token == null || token.isEmpty() || userId == null || userId.isEmpty()) {
             return ResponseEntity.badRequest().build(); 
         }
-        System.out.println("Token: " + token);
-        System.out.println("UserId: " + userId);
         PasswordToken passwordToken = passwordTokenService.findByUserId(Integer.parseInt(userId));
-        System.out.println("PasswordToken: " + passwordToken);
         if (passwordToken != null && passwordToken.getResetToken().equals(token)) {
             long currentTime = System.currentTimeMillis();
-            if (Integer.parseInt(passwordToken.getExpired()) > currentTime) {
+            if (Long.parseLong(passwordToken.getExpired()) > currentTime) {
                 return ResponseEntity.ok().body("OK");
             } else {
                 return ResponseEntity.status(400).body("Token expired"); 
