@@ -4,8 +4,10 @@ import com.example.store.model.User;
 import com.example.store.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
+import com.example.store.dto.*;
+import java.util.*;
+import com.example.store.helper.GeneratePwHelper;
+import com.example.store.util.*;
 
 @Service
 public class UserService {
@@ -16,45 +18,67 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    // Lấy danh sách tất cả users
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }
 
-    // Lấy user theo ID
     public User getUserById(Integer id) {
         return userRepository.findUserById(id);
     }
 
-    // Lấy user theo Email
     public User getUserByEmail(String email) {
         return userRepository.findByEmail(email);
     }
 
-    // Thêm user mới
-    public User createUser(User user) {
-        return userRepository.save(user);
+    public String createUser(UserDTO userDTO) {
+        String name = userDTO.getName();
+        String email = userDTO.getEmail();
+        String phone = userDTO.getPhone();
+        String address = userDTO.getAddress();
+        String status = userDTO.getStatus();
+        String password = GeneratePwHelper.generateRandomPassword(); 
+        String hashedPassword = PasswordEncoderUtil.encodePassword(password); 
+        User user = new User(name, email, hashedPassword, status, phone, address);
+        userRepository.save(user);
+        return password; 
     }
 
-    // Cập nhật user
-    // public User updateUser(Integer id, User newUserData) {
-    //     return userRepository.findById(id).map(user -> {
-    //         user.setName(newUserData.getName());
-    //         user.setEmail(newUserData.getEmail());
-    //         user.setPhone(newUserData.getPhone());
-    //         user.setAddress(newUserData.getAddress());
-    //         user.setStatus(newUserData.getStatus());
-    //         user.setToken(newUserData.getToken());
-    //         return userRepository.save(user);
-    //     });
-    // }
-
-    // Xóa user
-    public void deleteUser(Integer id) {
-        userRepository.deleteById(id);
+    public String updateUser(Integer id, UserInfoDTO userInfoDTO, String email) {
+        User user = userRepository.findUserByIdAndEmail(id, email);
+        if (user == null) {
+            return null; 
+        }
+        String name = userInfoDTO.getName();
+        if (name != null) {
+            user.setName(name);
+        }
+        String address = userInfoDTO.getAddress();
+        if (address != null) {
+            user.setAddress(address);
+        }
+        String phone = userInfoDTO.getPhone();
+        if (phone != null) {
+            user.setPhone(phone);
+        }
+        userRepository.save(user);
+        return "User updated successfully";
+    }
+    
+    public boolean deleteUser(Integer id, String email) {
+        User user = userRepository.findByEmail(email);
+        User userToDelete = userRepository.findUserById(id);
+        if (id == user.getId()) {
+            return false; 
+        }
+        if (userToDelete != null) {
+            userRepository.delete(userToDelete);
+            return true; 
+        } else {
+            return false; 
+        }
     }
 
-    // save token
+    
     public void saveToken(Integer userId, String token) {
         User user = userRepository.findUserById(userId);
         if (user != null) {

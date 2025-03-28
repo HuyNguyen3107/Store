@@ -45,12 +45,11 @@ public class User {
     public User() {
     }
 
-    public User(String name, String email, String password, String status, String token, String phone, String address) {
+    public User(String name, String email, String password, String status, String phone, String address) {
         this.name = name;
         this.email = email;
         this.password = password;
         this.status = status;
-        this.token = token;
         this.phone = phone;
         this.address = address;
     }

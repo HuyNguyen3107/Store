@@ -19,14 +19,20 @@ public class TokenInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String token = request.getHeader("Authorization");
+        String email = request.getHeader("Email");
 
         if (token == null || token.isEmpty()) {
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Không có token, truy cập bị từ chối");
             return false;
         }
 
+        if (email == null || email.isEmpty()) {
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Không có email, truy cập bị từ chối");
+            return false;
+        }
+
         token = token.substring(7);
-        User user = userRepository.findByToken(token);
+        User user = userRepository.findByEmailAndToken(email, token);
         if (user != null) {
             // request.setAttribute("user", user.get()); // Lưu user vào request để dùng sau này
             return true;
