@@ -6,6 +6,7 @@ import jakarta.validation.constraints.*;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import java.time.Instant;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @ToString(exclude = "user")
 @Entity
@@ -90,5 +91,6 @@ public class PasswordToken {
 
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id", insertable = false, updatable = false)
+    @JsonIgnore
     private User user;
 }
