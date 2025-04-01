@@ -41,9 +41,9 @@ public class StudentService {
         return updatedStudent != null ? "Student updated successfully" : null;
     }
 
-    public String deleteStudent(Integer id) {
+    public String deleteStudent(Student existingStudent) {
         try {
-            studentRepository.deleteById(id);
+            studentRepository.delete(existingStudent);
             return "Student deleted successfully";
         } catch (Exception e) {
             return null;

@@ -77,7 +77,7 @@ public class StudentController {
         if (existingStudent == null) {
             return ResponseEntity.notFound().build();
         }
-        String status = studentService.deleteStudent(id);
+        String status = studentService.deleteStudent(existingStudent);
         if (status != null) {
             return ResponseEntity.ok(status);
         } else {
