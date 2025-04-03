@@ -98,4 +98,22 @@ public class UserService {
             userRepository.save(user);
         }
     }
+    public String changePassword(User user, PasswordDTO passwordDTO) {
+        String password = passwordDTO.getPassword();
+        String newPassword = passwordDTO.getNwPassword();
+        String confirmPassword = passwordDTO.getConfirmPassword();
+
+        if (PasswordEncoderUtil.matches(password, user.getPassword())) {
+            if (newPassword.equals(confirmPassword)) {
+                String hashedNewPassword = PasswordEncoderUtil.encodePassword(newPassword);
+                user.setPassword(hashedNewPassword);
+                userRepository.save(user);
+                return "Password updated successfully";
+            } else {
+                return "New password and confirm password do not match";
+            }
+        } else {
+            return "Current password is incorrect";
+        }
+    }
 }

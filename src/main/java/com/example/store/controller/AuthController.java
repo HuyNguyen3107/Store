@@ -44,6 +44,9 @@ public class AuthController {
             // generate OTP with 6 number and save to userOTPService 
             String otp = Math.random() * 1000000 + "";
             otp = otp.substring(0, 6);
+            if (otp.length() < 6) {
+                otp = "0" + otp;
+            }
             String expirationTime = (System.currentTimeMillis() + 5 * 60 * 1000) + ""; // 5 minutes
             UserOTP userOTP = new UserOTP(otp, expirationTime, user.getId());
             if (userOTPService.getOTPByUserId(user.getId()) != null) {
@@ -141,23 +144,23 @@ public class AuthController {
         }
     }
 
-    @PostMapping("change-password")
-    public ResponseEntity<Void> changePassword(@RequestHeader("Authorization") String token, @RequestBody String newPassword) {
-        if (token == null || token.isEmpty()) {
-            return ResponseEntity.badRequest().build(); 
-        }
-        if (newPassword == null || newPassword.isEmpty()) {
-            return ResponseEntity.badRequest().build(); 
-        }
-        token = token.substring(7);
-        User user = userService.getUserByToken(token);
-        if (user != null) {
-            userService.updatePassword(user.getId(), newPassword);
-            return ResponseEntity.ok().build();
-        } else {
-            return ResponseEntity.status(404).build(); 
-        }
-    }
+    // @PostMapping("change-password")
+    // public ResponseEntity<Void> changePassword(@RequestHeader("Authorization") String token, @RequestBody String newPassword) {
+    //     if (token == null || token.isEmpty()) {
+    //         return ResponseEntity.badRequest().build(); 
+    //     }
+    //     if (newPassword == null || newPassword.isEmpty()) {
+    //         return ResponseEntity.badRequest().build(); 
+    //     }
+    //     token = token.substring(7);
+    //     User user = userService.getUserByToken(token);
+    //     if (user != null) {
+    //         userService.updatePassword(user.getId(), newPassword);
+    //         return ResponseEntity.ok().build();
+    //     } else {
+    //         return ResponseEntity.status(404).build(); 
+    //     }
+    // }
 
     @PostMapping("/verify-otp")
     public ResponseEntity<User> verifyOTP(@Valid @RequestBody OtpDTO otpDTO) {

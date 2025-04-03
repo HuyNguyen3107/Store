@@ -24,7 +24,7 @@ public class AuthService {
         if (user == null) {
             return null; 
         }
-        System.out.println("password hashed: " + PasswordEncoderUtil.encodePassword(password));
+        // System.out.println("password hashed: " + PasswordEncoderUtil.encodePassword(password));
         String hashedPassword = user.getPassword();
         boolean isPasswordMatch = PasswordEncoderUtil.matches(password, hashedPassword);
         if (!isPasswordMatch) {

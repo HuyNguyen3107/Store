@@ -75,4 +75,18 @@ public class UserController {
             return ResponseEntity.notFound().build(); 
         }
     }
+
+    @PostMapping("/change-password")
+    public ResponseEntity<String> changePassword(@Valid @RequestBody PasswordDTO passwordDTO, @RequestHeader("Email") String email) {
+        User user = userService.getUserByEmail(email);
+        if (user == null) {
+            return ResponseEntity.status(404).body("User not found"); 
+        }
+        String status = userService.changePassword(user, passwordDTO);
+        if (status != null) {
+            return ResponseEntity.ok(status); 
+        } else {
+            return ResponseEntity.badRequest().body("Failed to update password"); 
+        }
+    }
 }
