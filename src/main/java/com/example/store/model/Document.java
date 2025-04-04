@@ -6,6 +6,7 @@ import jakarta.validation.constraints.*;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import java.time.Instant;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "documents")
@@ -26,9 +27,8 @@ public class Document {
     @Column(name = "description")
     private String description;
 
-    @Lob
-    @NotBlank
-    @Column(name = "content", columnDefinition = "TEXT")
+    @NotNull
+    @Column(name = "content")
     private String content;
 
     @NotNull
@@ -103,5 +103,6 @@ public class Document {
 
     @ManyToOne
     @JoinColumn(name = "course_id", referencedColumnName = "id", insertable = false, updatable = false)
+    @JsonIgnore
     private Course course;
 }
