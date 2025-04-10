@@ -21,4 +21,8 @@ public class ClassroomService {
     public List<Classroom> getAllClassrooms() {
         return classroomRepository.findAll();
     }
+
+    public Classroom getClassroomById(Integer id) {
+        return classroomRepository.findById(id).orElse(null);
+    }
 }

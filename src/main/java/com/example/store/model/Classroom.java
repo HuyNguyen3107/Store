@@ -6,6 +6,7 @@ import jakarta.validation.constraints.*;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import java.time.Instant;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "classrooms")
@@ -142,6 +143,7 @@ public class Classroom {
 
     @ManyToOne
     @JoinColumn(name = "teacher_id", referencedColumnName = "id", insertable = false, updatable = false)
+    @JsonIgnore
     private Teacher teacher;
 
     @ManyToMany(mappedBy = "classrooms")
@@ -152,5 +154,6 @@ public class Classroom {
 
     @ManyToOne
     @JoinColumn(name = "course_id", referencedColumnName = "id", insertable = false, updatable = false)
+    @JsonIgnore
     private Course course;
 }

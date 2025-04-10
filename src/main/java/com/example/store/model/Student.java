@@ -6,7 +6,7 @@ import jakarta.validation.constraints.*;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import java.time.Instant;
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "students")
@@ -83,9 +83,10 @@ public class Student {
 
     @ManyToMany
     @JoinTable(
-        name = "students_classes",
+        name = "students_classrooms",
         joinColumns = @JoinColumn(name = "student_id", insertable = false, updatable = false),
         inverseJoinColumns = @JoinColumn(name = "class_id", insertable = false, updatable = false)
     )
+    @JsonIgnore
     private List<Classroom> classrooms = new ArrayList<>();
 }

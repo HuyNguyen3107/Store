@@ -26,4 +26,14 @@ public class ClassroomController {
         List<Classroom> classrooms = classroomService.getAllClassrooms();
         return ResponseEntity.ok(classrooms);
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Classroom> getClassroomById(@PathVariable Integer id) {
+        Classroom classroom = classroomService.getClassroomById(id);
+        if (classroom != null) {
+            return ResponseEntity.ok(classroom);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
 }
