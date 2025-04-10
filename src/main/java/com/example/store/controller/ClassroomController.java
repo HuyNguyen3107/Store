@@ -15,9 +15,13 @@ import java.util.*;
 @Validated
 public class ClassroomController {
     private final ClassroomService classroomService;
+    private final CourseService courseService;
+    private final TeacherService teacherService;
 
     @Autowired
-    public ClassroomController(ClassroomService classroomService) {
+    public ClassroomController(ClassroomService classroomService, CourseService courseService, TeacherService teacherService) {
+        this.courseService = courseService;
+        this.teacherService = teacherService;
         this.classroomService = classroomService;
     }
 
@@ -36,4 +40,61 @@ public class ClassroomController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    @PostMapping
+    public ResponseEntity<String> createClassroom(@Valid @RequestBody ClassroomDTO classroomDTO) {
+       Teacher teacher = teacherService.getTeacherById(Integer.parseInt(classroomDTO.getTeacherId()));
+        if (teacher == null) {
+            return ResponseEntity.badRequest().body("Teacher not found");
+        }
+
+        Course course = courseService.getCourseById(Integer.parseInt(classroomDTO.getCourseId()));
+        if (course == null) {
+            return ResponseEntity.badRequest().body("Course not found");
+        }
+
+        String status = classroomService.createClassroom(classroomDTO);
+        if (status != null) {
+            return ResponseEntity.ok(status);
+        } else {
+            return ResponseEntity.status(500).body("Error creating classroom");
+        }
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<String> updateClassroom(@PathVariable Integer id, @Valid @RequestBody ClassroomDTO classroomDTO) {
+        Classroom existingClassroom = classroomService.getClassroomById(id);
+        if (existingClassroom == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        Teacher teacher = teacherService.getTeacherById(Integer.parseInt(classroomDTO.getTeacherId()));
+        if (teacher == null) {
+            return ResponseEntity.badRequest().body("Teacher not found");
+        }
+
+        Course course = courseService.getCourseById(Integer.parseInt(classroomDTO.getCourseId()));
+        if (course == null) {
+            return ResponseEntity.badRequest().body("Course not found");
+        }
+
+        String status = classroomService.updateClassroom(existingClassroom, classroomDTO);
+        if (status != null) {
+            return ResponseEntity.ok(status);
+        } else {
+            return ResponseEntity.status(500).body("Error updating classroom");
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteClassroom(@PathVariable Integer id) {
+        Classroom classroom = classroomService.getClassroomById(id);
+        if (classroom == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        classroomService.deleteClassroom(classroom);
+        return ResponseEntity.ok("Classroom deleted successfully");
+    }
+
 }
