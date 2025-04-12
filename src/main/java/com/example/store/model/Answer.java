@@ -6,6 +6,7 @@ import jakarta.validation.constraints.*;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import java.time.Instant;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 
 @Entity
@@ -94,6 +95,7 @@ public class Answer {
 
     @ManyToOne
     @JoinColumn(name = "homework_id", referencedColumnName = "id", insertable = false, updatable = false)
+    @JsonIgnore
     private Homework homework;
 }
 

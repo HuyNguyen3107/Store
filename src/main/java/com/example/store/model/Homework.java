@@ -6,6 +6,7 @@ import jakarta.validation.constraints.*;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import java.time.Instant;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "homeworks")
@@ -21,7 +22,6 @@ public class Homework {
     private String title;
 
     @NotBlank
-    @Column(columnDefinition = "TEXT")
     private String content;
 
     @NotNull
@@ -87,6 +87,7 @@ public class Homework {
 
     @ManyToOne
     @JoinColumn(name = "class_id", referencedColumnName = "id", insertable = false, updatable = false)
+    @JsonIgnore
     private Classroom classroom;
 
     @OneToMany(mappedBy = "homework", cascade = CascadeType.ALL, orphanRemoval = true)
