@@ -17,9 +17,7 @@ public class Answer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-
-    @Lob
-    @Column(columnDefinition = "TEXT")
+    
     @NotBlank
     private String content;
 
@@ -91,6 +89,7 @@ public class Answer {
 
     @ManyToOne
     @JoinColumn(name = "student_id", referencedColumnName = "id", insertable = false, updatable = false)
+    @JsonIgnore
     private Student student;
 
     @ManyToOne
