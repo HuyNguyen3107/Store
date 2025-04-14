@@ -52,7 +52,6 @@ public class ClassroomController {
         if (course == null) {
             return ResponseEntity.badRequest().body("Course not found");
         }
-
         String status = classroomService.createClassroom(classroomDTO);
         if (status != null) {
             return ResponseEntity.ok(status);

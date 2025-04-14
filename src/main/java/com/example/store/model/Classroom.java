@@ -26,7 +26,7 @@ public class Classroom {
     private Integer teacherId;
 
     @NotNull
-    @Column(name = "course_id", insertable = false, updatable = false)
+    @Column(name = "course_id")
     private Integer courseId;
 
     @NotNull

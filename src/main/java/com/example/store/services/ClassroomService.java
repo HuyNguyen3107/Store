@@ -36,6 +36,8 @@ public class ClassroomService {
         classroom.setSchedule(classroomDTO.getSchedule());
         classroom.setStudentNumber(Integer.parseInt(classroomDTO.getStudentNumber()));
 
+        System.out.println("Classroom details: " + classroom.getCourseId());
+
         Classroom savedClassroom = classroomRepository.save(classroom);
         return savedClassroom != null ? "Classroom created successfully" : null;
     }
