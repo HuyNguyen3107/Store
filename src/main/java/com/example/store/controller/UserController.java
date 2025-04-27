@@ -16,11 +16,13 @@ import java.util.*;
 public class UserController {
     private final UserService userService;
     private final EmailService emailService;
+    private final UserRoleService userRoleService;
 
     @Autowired
-    public UserController(UserService userService, EmailService emailService) {
+    public UserController(UserService userService, EmailService emailService, UserRoleService userRoleService) {
         this.emailService = emailService;
         this.userService = userService;
+        this.userRoleService = userRoleService;
     }
 
     @GetMapping
@@ -87,6 +89,16 @@ public class UserController {
             return ResponseEntity.ok(status); 
         } else {
             return ResponseEntity.badRequest().body("Failed to update password"); 
+        }
+    }
+
+    @PostMapping("/update-roles")
+    public ResponseEntity<String> updateRolesToUser(@Valid @RequestBody UserRoleDTO userRoleDTO) {
+        String status = userRoleService.updateRolesToUser(userRoleDTO);
+        if (status != null) {
+            return ResponseEntity.ok(status); 
+        } else {
+            return ResponseEntity.badRequest().body("Failed to update roles for user"); 
         }
     }
 }

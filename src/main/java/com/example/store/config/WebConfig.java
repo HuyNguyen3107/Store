@@ -13,6 +13,6 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(tokenInterceptor).addPathPatterns("/users/**", "/auth/logout", "/courses/**", "/classrooms/**", "/teachers/**", "/students/**", "/documents/**", "/homeworks/**", "/answers/**").excludePathPatterns("/auth/login", "/auth/forgot-password", "/auth/reset-password", "/auth/verify-otp");
+        registry.addInterceptor(tokenInterceptor).addPathPatterns("/users/**", "/auth/logout", "/courses/**", "/classrooms/**", "/teachers/**", "/students/**", "/documents/**", "/homeworks/**", "/answers/**", "/permissions/**", "/roles/**").excludePathPatterns("/auth/login", "/auth/forgot-password", "/auth/reset-password", "/auth/verify-otp");
     }
 }

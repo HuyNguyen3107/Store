@@ -8,40 +8,52 @@ import lombok.*;
 import java.time.Instant;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-@ToString(exclude = "users")    
 @Entity
-@Table(name = "roles")
+@Table(name = "users_roles")
 @Data
-public class Role {
+public class UserRole {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @NotBlank
-    @Size(max = 100)
-    private String name;
+    @NotNull
+    @Column(name = "user_id")
+    private Integer userId;
 
-    public Role() {
-    }   
+    @NotNull
+    @Column(name = "role_id")
+    private Integer roleId;
 
-    public Role(String name) {
-        this.name = name;
+    public UserRole() {
+    }
+
+    public UserRole(Integer userId, Integer roleId) {
+        this.userId = userId;
+        this.roleId = roleId;
     }
 
     public Integer getId() {
-        return this.id;
+        return id;
     }
 
     public void setId(Integer id) {
         this.id = id;
     }
 
-    public String getName() {
-        return this.name;
+    public Integer getUserId() {
+        return userId;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
+
+    public Integer getRoleId() {
+        return roleId;
+    }
+
+    public void setRoleId(Integer roleId) {
+        this.roleId = roleId;
     }
 
     @Column(name = "created_at", updatable = false, nullable = false)
@@ -59,16 +71,4 @@ public class Role {
     protected void onUpdate() {
         updatedAt = Instant.now();
     }
-
-    @ManyToMany(mappedBy = "roles")
-    @JsonIgnore
-    private List<User> users = new ArrayList<>();
-
-    @ManyToMany
-    @JoinTable(
-        name = "roles_permissions",
-        joinColumns = @JoinColumn(name = "role_id", insertable = false, updatable = false),
-        inverseJoinColumns = @JoinColumn(name = "permission_id", insertable = false, updatable = false)
-    )
-    private List<Permission> permissions = new ArrayList<>();
 }

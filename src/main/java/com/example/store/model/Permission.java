@@ -6,8 +6,9 @@ import jakarta.validation.constraints.*;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import java.time.Instant;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
-// @ToString(exclude = "permissions")
+@ToString(exclude = "roles")
 @Entity
 @Table(name = "permissions")
 @Data
@@ -62,5 +63,6 @@ public class Permission {
     }
 
     @ManyToMany(mappedBy = "permissions")
+    @JsonIgnore
     private List<Role> roles = new ArrayList<>();
 }

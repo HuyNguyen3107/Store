@@ -9,44 +9,45 @@ import java.time.Instant;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
-@Table(name = "students_classrooms")
+@Table(name = "roles_permissions")
 @Data
-public class StudentClassroom {
+public class RolePermission {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @NotNull
-    @Column(name = "student_id")
-    private Integer studentId;
+    @Column(name = "role_id")
+    private Integer roleId;
 
     @NotNull
-    @Column(name = "class_id")
-    private Integer classId;
+    @Column(name = "permission_id")
+    private Integer permissionId;
 
-    public StudentClassroom() {
+    public RolePermission() {
     }
 
-    public StudentClassroom(Integer studentId, Integer classId) {
-        this.studentId = studentId;
-        this.classId = classId;
+    public RolePermission(Integer roleId, Integer permissionId) {
+        this.roleId = roleId;
+        this.permissionId = permissionId;
     }
 
-    public Integer getStudentId() {
-        return studentId;
+    public Integer getRoleId() {
+        return roleId;
     }
 
-    public void setStudentId(Integer studentId) {
-        this.studentId = studentId;
+    public void setRoleId(Integer roleId) {
+        this.roleId = roleId;
     }
 
-    public Integer getClassId() {
-        return classId;
+    public Integer getPermissionId() {
+        return permissionId;
     }
 
-    public void setClassId(Integer classId) {
-        this.classId = classId;
+    public void setPermissionId(Integer permissionId) {
+        this.permissionId = permissionId;
     }
+    
 
     @Column(name = "created_at", updatable = false, nullable = false)
     private Instant createdAt = Instant.now();
