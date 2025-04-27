@@ -4,9 +4,10 @@ import java.util.*;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Data;
+import lombok.*;
 import java.time.Instant;
 
+// @ToString(exclude = "permissions")
 @Entity
 @Table(name = "roles")
 @Data

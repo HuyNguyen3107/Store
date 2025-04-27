@@ -17,9 +17,11 @@ public class ClassroomController {
     private final ClassroomService classroomService;
     private final CourseService courseService;
     private final TeacherService teacherService;
+    private final StudentClassroomService studentClassroomService;
 
     @Autowired
-    public ClassroomController(ClassroomService classroomService, CourseService courseService, TeacherService teacherService) {
+    public ClassroomController(ClassroomService classroomService, CourseService courseService, TeacherService teacherService, StudentClassroomService studentClassroomService) {
+        this.studentClassroomService = studentClassroomService;
         this.courseService = courseService;
         this.teacherService = teacherService;
         this.classroomService = classroomService;
@@ -96,4 +98,23 @@ public class ClassroomController {
         return ResponseEntity.ok("Classroom deleted successfully");
     }
 
+    @PostMapping("/add-students")
+    public ResponseEntity<String> addStudentsToClassroom(@Valid @RequestBody SCRequestDTO requestDTO) {
+        String status = studentClassroomService.addStudentsToClassroom(requestDTO);
+        if (status != null) {
+            return ResponseEntity.ok(status);
+        } else {
+            return ResponseEntity.status(500).body("Error adding students to classroom");
+        }
+    }
+
+    @PostMapping("/remove-students")
+    public ResponseEntity<String> removeStudentsFromClassroom(@Valid @RequestBody SCRequestDTO requestDTO) {
+        String status = studentClassroomService.removeStudentsFromClassroom(requestDTO);
+        if (status != null) {
+            return ResponseEntity.ok(status);
+        } else {
+            return ResponseEntity.status(500).body("Error removing students from classroom");
+        }
+    }
 }

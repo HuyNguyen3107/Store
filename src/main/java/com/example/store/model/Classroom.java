@@ -4,10 +4,11 @@ import java.util.*;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Data;
+import lombok.*;
 import java.time.Instant;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+@ToString(exclude = {"teacher", "course"})
 @Entity
 @Table(name = "classrooms")
 @Data
