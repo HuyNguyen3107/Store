@@ -1,7 +1,7 @@
 package com.example.store.service;
 
-import com.example.store.model.Role;
-import com.example.store.repository.RoleRepository;
+import com.example.store.model.*;
+import com.example.store.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.example.store.dto.*;
@@ -12,9 +12,11 @@ import com.example.store.util.*;
 @Service
 public class RoleService {
     private final RoleRepository roleRepository;
+    private final RolePermissionRepository rolePermissionRepository;
 
     @Autowired
-    public RoleService(RoleRepository roleRepository) {
+    public RoleService(RoleRepository roleRepository, RolePermissionRepository rolePermissionRepository) {
+        this.rolePermissionRepository = rolePermissionRepository;
         this.roleRepository = roleRepository;
     }
 
@@ -30,6 +32,19 @@ public class RoleService {
         Role role = new Role();
         role.setName(roleDTO.getName());
         Role savedRole = roleRepository.save(role);
+
+        int roleId = savedRole.getId();
+        rolePermissionRepository.deleteAllByRoleId(roleId);
+        List<RolePermission> rolePermissions = new ArrayList<>();
+
+        for (String permissionId : roleDTO.getPermissionIds()) {
+            RolePermission rolePermission = new RolePermission();
+            rolePermission.setRoleId(roleId);
+            rolePermission.setPermissionId(Integer.parseInt(permissionId));
+            rolePermissions.add(rolePermission);
+        }
+
+        rolePermissionRepository.saveAll(rolePermissions);
         return savedRole != null ? "Role created successfully" : null;
     }
     
