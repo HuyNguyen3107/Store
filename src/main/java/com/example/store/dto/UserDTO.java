@@ -4,6 +4,7 @@ package com.example.store.dto;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import java.util.*;
 
 public class UserDTO {
     @NotBlank(message = "Name is required")
@@ -24,14 +25,17 @@ public class UserDTO {
 
     private String status = "active";
 
+    private List<String> roleIds;
+
     public UserDTO() {
     }
 
-    public UserDTO(String name, String email, String phone, String address) {
+    public UserDTO(String name, String email, String phone, String address, List<String> roleIds) {
         this.name = name;
         this.email = email;
         this.phone = phone;
         this.address = address;
+        this.roleIds = roleIds;
     }
 
     public String getName() {
@@ -68,5 +72,17 @@ public class UserDTO {
 
     public String getStatus() {
         return this.status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public List<String> getRoleIds() {
+        return this.roleIds;
+    }
+
+    public void setRoleIds(List<String> roleIds) {
+        this.roleIds = roleIds;
     }
 }

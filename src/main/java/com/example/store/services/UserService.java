@@ -1,7 +1,7 @@
 package com.example.store.service;
 
-import com.example.store.model.User;
-import com.example.store.repository.UserRepository;
+import com.example.store.model.*;
+import com.example.store.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.example.store.dto.*;
@@ -12,9 +12,11 @@ import com.example.store.util.*;
 @Service
 public class UserService {
     private final UserRepository userRepository;
+    private final UserRoleRepository userRoleRepository;
 
     @Autowired
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, UserRoleRepository userRoleRepository) {
+        this.userRoleRepository = userRoleRepository;
         this.userRepository = userRepository;
     }
 
@@ -39,7 +41,18 @@ public class UserService {
         String password = GeneratePwHelper.generateRandomPassword(); 
         String hashedPassword = PasswordEncoderUtil.encodePassword(password); 
         User user = new User(name, email, hashedPassword, status, phone, address);
-        userRepository.save(user);
+        User newUser = userRepository.save(user);
+
+        userRoleRepository.deleteAllByUserId(newUser.getId());
+        List<UserRole> userRoles = new ArrayList<>();
+        for (String roleId : userDTO.getRoleIds()) {
+            UserRole userRole = new UserRole();
+            userRole.setUserId(newUser.getId());    
+            userRole.setRoleId(Integer.parseInt(roleId));
+            userRoles.add(userRole);
+        }
+
+        userRoleRepository.saveAll(userRoles);
         return password; 
     }
 
