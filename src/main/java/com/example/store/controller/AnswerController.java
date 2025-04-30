@@ -17,16 +17,35 @@ public class AnswerController {
     private final AnswerService answerService;
     private final HomeworkService homeworkService;
     private final StudentService studentService;
+    private final UserService userService;
 
     @Autowired
-    public AnswerController(AnswerService answerService, HomeworkService homeworkService, StudentService studentService) {
+    public AnswerController(AnswerService answerService, HomeworkService homeworkService, StudentService studentService, UserService userService) {
+        this.userService = userService;
         this.answerService = answerService;
         this.homeworkService = homeworkService;
         this.studentService = studentService;
     }
 
     @GetMapping
-    public ResponseEntity<List<Answer>> getAllAnswers() {
+    public ResponseEntity<List<Answer>> getAllAnswers(@RequestHeader("Email") String email) {
+        User user = userService.getUserByEmail(email);
+        if (user == null) {
+            return ResponseEntity.badRequest().body(null);
+        }
+        List<String> permissionValues = new ArrayList<>();
+
+        for (Role role : user.getRoles()) {
+            for (Permission permission : role.getPermissions()) {
+                String value = permission.getValue();
+                if (!permissionValues.contains(value)) {
+                    permissionValues.add(value); // tránh trùng lặp
+                }
+            }
+        }
+        if (!permissionValues.contains("answers.view")) {
+            return ResponseEntity.status(403).body(null); // Không có quyền truy cập
+        }
         List<Answer> answers = answerService.getAllAnswers();
         return ResponseEntity.ok(answers);
     }
