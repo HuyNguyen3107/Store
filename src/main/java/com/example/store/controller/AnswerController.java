@@ -2,6 +2,7 @@ package com.example.store.controller;
 
 import com.example.store.model.*;
 import com.example.store.service.*;
+import com.example.store.helper.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -33,25 +34,24 @@ public class AnswerController {
         if (user == null) {
             return ResponseEntity.badRequest().body(null);
         }
-        List<String> permissionValues = new ArrayList<>();
-
-        for (Role role : user.getRoles()) {
-            for (Permission permission : role.getPermissions()) {
-                String value = permission.getValue();
-                if (!permissionValues.contains(value)) {
-                    permissionValues.add(value); // tránh trùng lặp
-                }
-            }
-        }
-        if (!permissionValues.contains("answers.view")) {
-            return ResponseEntity.status(403).body(null); // Không có quyền truy cập
+        boolean hasPermission = ValidPermission.hasPermission(user, "answers.view");
+        if (!hasPermission) {
+            return ResponseEntity.status(403).body(null); // Forbidden
         }
         List<Answer> answers = answerService.getAllAnswers();
         return ResponseEntity.ok(answers);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Answer> getAnswerById(@PathVariable Integer id) {
+    public ResponseEntity<Answer> getAnswerById(@PathVariable Integer id, @RequestHeader("Email") String email) {
+        User user = userService.getUserByEmail(email);
+        if (user == null) {
+            return ResponseEntity.badRequest().body(null);
+        }
+        boolean hasPermission = ValidPermission.hasPermission(user, "answers.view");
+        if (!hasPermission) {
+            return ResponseEntity.status(403).body(null); // Forbidden
+        }
         Answer answer = answerService.getAnswerById(id);
         if (answer != null) {
             return ResponseEntity.ok(answer);
@@ -61,7 +61,15 @@ public class AnswerController {
     }
 
     @PostMapping
-    public ResponseEntity<String> createAnswer(@Valid @RequestBody AnswerDTO answerDTO) {
+    public ResponseEntity<String> createAnswer(@Valid @RequestBody AnswerDTO answerDTO, @RequestHeader("Email") String email) {
+        User user = userService.getUserByEmail(email);
+        if (user == null) {
+            return ResponseEntity.badRequest().body("User not found");
+        }
+        boolean hasPermission = ValidPermission.hasPermission(user, "answers.create");
+        if (!hasPermission) {
+            return ResponseEntity.status(403).body("Forbidden"); // Forbidden
+        }
         Homework homework = homeworkService.getHomeworkById(Integer.parseInt(answerDTO.getHomeworkId()));
         if (homework == null) {
             return ResponseEntity.badRequest().body("Homework not found");
@@ -81,7 +89,15 @@ public class AnswerController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<String> updateAnswer(@PathVariable Integer id, @Valid @RequestBody AnswerDTO answerDTO) {
+    public ResponseEntity<String> updateAnswer(@PathVariable Integer id, @Valid @RequestBody AnswerDTO answerDTO, @RequestHeader("Email") String email) {
+        User user = userService.getUserByEmail(email);
+        if (user == null) {
+            return ResponseEntity.badRequest().body("User not found");
+        }
+        boolean hasPermission = ValidPermission.hasPermission(user, "answers.update");
+        if (!hasPermission) {
+            return ResponseEntity.status(403).body("Forbidden"); // Forbidden
+        }
         Answer existingAnswer = answerService.getAnswerById(id);
         if (existingAnswer == null) {
             return ResponseEntity.notFound().build();
@@ -106,7 +122,15 @@ public class AnswerController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteAnswer(@PathVariable Integer id) {
+    public ResponseEntity<String> deleteAnswer(@PathVariable Integer id, @RequestHeader("Email") String email) {
+        User user = userService.getUserByEmail(email);
+        if (user == null) {
+            return ResponseEntity.badRequest().body("User not found");
+        }
+        boolean hasPermission = ValidPermission.hasPermission(user, "answers.delete");
+        if (!hasPermission) {
+            return ResponseEntity.status(403).body("Forbidden"); // Forbidden
+        }
         Answer existingAnswer = answerService.getAnswerById(id);
         if (existingAnswer == null) {
             return ResponseEntity.notFound().build();

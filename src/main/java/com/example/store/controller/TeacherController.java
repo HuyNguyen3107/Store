@@ -2,6 +2,7 @@ package com.example.store.controller;
 
 import com.example.store.model.*;
 import com.example.store.service.*;
+import com.example.store.helper.*;
 import com.example.store.util.DatetimeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -25,13 +26,29 @@ public class TeacherController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Teacher>> getAllTeachers() {
+    public ResponseEntity<List<Teacher>> getAllTeachers(@RequestHeader("Email") String email) {
+        User user = userService.getUserByEmail(email);
+        if (user == null) {
+            return ResponseEntity.badRequest().body(null);
+        }
+        boolean hasPermission = ValidPermission.hasPermission(user, "teachers.view");
+        if (!hasPermission) {
+            return ResponseEntity.status(403).body(null); // Forbidden
+        }
         List<Teacher> teachers = teacherService.getAllTeachers();
         return ResponseEntity.ok(teachers);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Teacher> getTeacherById(@PathVariable Integer id) {
+    public ResponseEntity<Teacher> getTeacherById(@PathVariable Integer id, @RequestHeader("Email") String email) {
+        User user = userService.getUserByEmail(email);
+        if (user == null) {
+            return ResponseEntity.badRequest().body(null);
+        }
+        boolean hasPermission = ValidPermission.hasPermission(user, "teachers.view");
+        if (!hasPermission) {
+            return ResponseEntity.status(403).body(null); // Forbidden
+        }
         Teacher teacher = teacherService.getTeacherById(id);
         if (teacher != null) {
             return ResponseEntity.ok(teacher);
@@ -41,7 +58,15 @@ public class TeacherController {
     }
 
     @PostMapping
-    public ResponseEntity<String> createTeacher(@Valid @RequestBody TeacherDTO teacherDTO) {
+    public ResponseEntity<String> createTeacher(@Valid @RequestBody TeacherDTO teacherDTO, @RequestHeader("Email") String email) {
+        User user = userService.getUserByEmail(email);
+        if (user == null) {
+            return ResponseEntity.badRequest().body("User not found");
+        }
+        boolean hasPermission = ValidPermission.hasPermission(user, "teachers.create");
+        if (!hasPermission) {
+            return ResponseEntity.status(403).body("Forbidden"); // Forbidden
+        }
         int userId = Integer.parseInt(teacherDTO.getUserId());
         User user = userService.getUserById(userId);
         if (user == null) {
@@ -56,7 +81,15 @@ public class TeacherController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<String> updateTeacher(@PathVariable Integer id, @Valid @RequestBody TeacherDTO teacherDTO) {
+    public ResponseEntity<String> updateTeacher(@PathVariable Integer id, @Valid @RequestBody TeacherDTO teacherDTO, @RequestHeader("Email") String email) {
+        User user = userService.getUserByEmail(email);
+        if (user == null) {
+            return ResponseEntity.badRequest().body("User not found");
+        }
+        boolean hasPermission = ValidPermission.hasPermission(user, "teachers.update");
+        if (!hasPermission) {
+            return ResponseEntity.status(403).body("Forbidden"); // Forbidden
+        }
         Teacher existingTeacher = teacherService.getTeacherById(id);
         User user = userService.getUserById(Integer.parseInt(teacherDTO.getUserId()));
         if (user == null) {
@@ -74,7 +107,15 @@ public class TeacherController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteTeacher(@PathVariable Integer id) {
+    public ResponseEntity<String> deleteTeacher(@PathVariable Integer id, @RequestHeader("Email") String email) {
+        User user = userService.getUserByEmail(email);
+        if (user == null) {
+            return ResponseEntity.badRequest().body("User not found");
+        }
+        boolean hasPermission = ValidPermission.hasPermission(user, "teachers.delete");
+        if (!hasPermission) {
+            return ResponseEntity.status(403).body("Forbidden"); // Forbidden
+        }
         Teacher existingTeacher = teacherService.getTeacherById(id);
         if (existingTeacher == null) {
             return ResponseEntity.notFound().build();
