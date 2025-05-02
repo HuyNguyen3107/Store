@@ -107,7 +107,8 @@ public class UserService {
     public void updatePassword(Integer userId, String newPassword) {
         User user = userRepository.findUserById(userId);
         if (user != null) {
-            user.setPassword(newPassword);
+            String hashedNewPassword = PasswordEncoderUtil.encodePassword(newPassword);
+            user.setPassword(hashedNewPassword);
             userRepository.save(user);
         }
     }

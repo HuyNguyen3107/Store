@@ -58,11 +58,11 @@ public class StudentController {
 
     @PostMapping
     public ResponseEntity<String> createStudent(@Valid @RequestBody StudentDTO studentDTO, @RequestHeader("Email") String email) {
-        User user = userService.getUserByEmail(email);
-        if (user == null) {
+        User userCheck = userService.getUserByEmail(email);
+        if (userCheck == null) {
             return ResponseEntity.badRequest().body("User not found");
         }
-        boolean hasPermission = ValidPermission.hasPermission(user, "students.create");
+        boolean hasPermission = ValidPermission.hasPermission(userCheck, "students.create");
         if (!hasPermission) {
             return ResponseEntity.status(403).body("Forbidden"); // Forbidden
         }
@@ -80,11 +80,11 @@ public class StudentController {
 
     @PutMapping("/{id}")
     public ResponseEntity<String> updateStudent(@PathVariable Integer id, @Valid @RequestBody StudentDTO studentDTO, @RequestHeader("Email") String email) {
-        User user = userService.getUserByEmail(email);
-        if (user == null) {
+        User userCheck = userService.getUserByEmail(email);
+        if (userCheck == null) {
             return ResponseEntity.badRequest().body("User not found");
         }
-        boolean hasPermission = ValidPermission.hasPermission(user, "students.update");
+        boolean hasPermission = ValidPermission.hasPermission(userCheck, "students.update");
         if (!hasPermission) {
             return ResponseEntity.status(403).body("Forbidden"); // Forbidden
         }

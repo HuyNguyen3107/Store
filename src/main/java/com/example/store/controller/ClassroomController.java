@@ -132,6 +132,10 @@ public class ClassroomController {
         if (!hasPermission) {
             return ResponseEntity.status(403).body("Forbidden"); // Forbidden
         }
+        String status = studentClassroomService.deleteAllByClassId(id);
+        if (status == null) {
+            return ResponseEntity.status(500).body("Error deleting students from classroom");
+        }
         Classroom classroom = classroomService.getClassroomById(id);
         if (classroom == null) {
             return ResponseEntity.notFound().build();

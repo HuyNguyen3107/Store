@@ -32,4 +32,9 @@ public class UserRoleService {
         userRoleRepository.saveAll(userRoles);
         return "Roles updated successfully";
     }
+
+    public String deleteUserRoleByUserId(int userId) {
+        userRoleRepository.deleteAllByUserId(userId);
+        return "User roles deleted successfully";
+    }
 }

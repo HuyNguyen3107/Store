@@ -54,7 +54,7 @@ public class AuthController {
             } else {
                 userOTPService.addOTP(userOTP);
             }
-            emailService.sendEmail("levi2k3ds@gmail.com", "OTP Code to login", "Your OTP code is: " + otp);
+            emailService.sendEmail(AuthDTO.getEmail(), "OTP Code to login", "Your OTP code is: " + otp);
             return ResponseEntity.ok().build(); 
         } else {
             return ResponseEntity.status(401).build(); 
@@ -144,24 +144,6 @@ public class AuthController {
         }
     }
 
-    // @PostMapping("change-password")
-    // public ResponseEntity<Void> changePassword(@RequestHeader("Authorization") String token, @RequestBody String newPassword) {
-    //     if (token == null || token.isEmpty()) {
-    //         return ResponseEntity.badRequest().build(); 
-    //     }
-    //     if (newPassword == null || newPassword.isEmpty()) {
-    //         return ResponseEntity.badRequest().build(); 
-    //     }
-    //     token = token.substring(7);
-    //     User user = userService.getUserByToken(token);
-    //     if (user != null) {
-    //         userService.updatePassword(user.getId(), newPassword);
-    //         return ResponseEntity.ok().build();
-    //     } else {
-    //         return ResponseEntity.status(404).build(); 
-    //     }
-    // }
-
     @PostMapping("/verify-otp")
     public ResponseEntity<User> verifyOTP(@Valid @RequestBody OtpDTO otpDTO) {
         String otp = otpDTO.getOtp();
@@ -171,8 +153,6 @@ public class AuthController {
         UserOTP userOTP = userOTPService.getByOTP(otp);
         if (userOTP != null) {
             long currentTime = System.currentTimeMillis();
-            System.out.println("Current time: " + currentTime); 
-            System.out.println("Expired time: " + userOTP.getExpired());
             if (Long.parseLong(userOTP.getExpired()) > currentTime) {
                 User user = userService.getUserById(userOTP.getUserId());
                 if (user != null) {

@@ -4,7 +4,7 @@ import com.example.store.model.*;
 import java.util.*;
 
 public class ValidPermission {
-    public static boolean hasPermission(User user, String permission) {
+    public static boolean hasPermission(User user, String permissionValid) {
         List<String> permissionValues = new ArrayList<>();
 
         for (Role role : user.getRoles()) {
@@ -15,7 +15,7 @@ public class ValidPermission {
                 }
             }
         }
-        if (!permissionValues.contains(permission)) {
+        if (!permissionValues.contains(permissionValid)) {
             return false; // Không có quyền truy cập
         }
         return true; // Có quyền truy cập

@@ -42,11 +42,11 @@ public class UserController {
 
     @GetMapping("/{id}")
     public ResponseEntity<User> getUserById(@PathVariable Integer id, @RequestHeader("Email") String email) {
-        User user = userService.getUserByEmail(email);
-        if (user == null) {
+        User userCheck = userService.getUserByEmail(email);
+        if (userCheck == null) {
             return ResponseEntity.badRequest().body(null);
         }
-        boolean hasPermission = ValidPermission.hasPermission(user, "users.view");
+        boolean hasPermission = ValidPermission.hasPermission(userCheck, "users.view");
         if (!hasPermission) {
             return ResponseEntity.status(403).body(null); // Forbidden
         }
@@ -59,8 +59,8 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> createUser(@Valid @RequestBody UserDTO userDTO, @RequestHeader("Email") String email) {
-        User user = userService.getUserByEmail(email);
+    public ResponseEntity<Void> createUser(@Valid @RequestBody UserDTO userDTO, @RequestHeader("Email") String emailCheck) {
+        User user = userService.getUserByEmail(emailCheck);
         if (user == null) {
             return ResponseEntity.badRequest().body(null);
         }
@@ -111,6 +111,10 @@ public class UserController {
         if (!hasPermission) {
             return ResponseEntity.status(403).body(null); // Forbidden
         }
+        String status = userRoleService.deleteUserRoleByUserId(id);
+        if (status == null) {
+            return ResponseEntity.badRequest().body("Failed to delete user roles"); 
+        }
         boolean deleted = userService.deleteUser(id, email);
         if (deleted) {
             return ResponseEntity.ok("User deleted successfully"); 
@@ -122,13 +126,6 @@ public class UserController {
     @PostMapping("/change-password")
     public ResponseEntity<String> changePassword(@Valid @RequestBody PasswordDTO passwordDTO, @RequestHeader("Email") String email) {
         User user = userService.getUserByEmail(email);
-        if (user == null) {
-            return ResponseEntity.status(404).body("User not found"); 
-        }
-        boolean hasPermission = ValidPermission.hasPermission(user, "users.change_password");
-        if (!hasPermission) {
-            return ResponseEntity.status(403).body("Forbidden"); // Forbidden
-        }
         String status = userService.changePassword(user, passwordDTO);
         if (status != null) {
             return ResponseEntity.ok(status); 
