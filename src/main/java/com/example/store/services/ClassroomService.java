@@ -66,6 +66,17 @@ public class ClassroomService {
         return "Course IDs updated to null successfully";
     }
 
+    public String updateTeacherIdToNull(int[] classroomIds) {
+        for (int classroomId : classroomIds) {
+            Classroom classroom = classroomRepository.findById(classroomId).orElse(null);
+            if (classroom != null) {
+                classroom.setTeacherId(null);
+                classroomRepository.save(classroom);
+            }
+        }
+        return "Teacher IDs updated to null successfully";
+    }
+
     public String deleteClassroom(Classroom existingClassroom) {
         classroomRepository.delete(existingClassroom);
         return "Classroom deleted successfully";

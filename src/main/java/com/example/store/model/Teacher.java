@@ -78,6 +78,6 @@ public class Teacher {
     @JoinColumn(name = "user_id", referencedColumnName = "id", insertable = false, updatable = false)
     private User user;
 
-    @OneToMany(mappedBy = "teacher", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "teacher")
     private List<Classroom> classrooms = new ArrayList<>();
 }

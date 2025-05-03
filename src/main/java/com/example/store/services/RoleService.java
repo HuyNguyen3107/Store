@@ -13,9 +13,11 @@ import com.example.store.util.*;
 public class RoleService {
     private final RoleRepository roleRepository;
     private final RolePermissionRepository rolePermissionRepository;
+    private final UserRoleRepository userRoleRepository;
 
     @Autowired
-    public RoleService(RoleRepository roleRepository, RolePermissionRepository rolePermissionRepository) {
+    public RoleService(RoleRepository roleRepository, RolePermissionRepository rolePermissionRepository, UserRoleRepository userRoleRepository) {
+        this.userRoleRepository = userRoleRepository;
         this.rolePermissionRepository = rolePermissionRepository;
         this.roleRepository = roleRepository;
     }
@@ -54,7 +56,10 @@ public class RoleService {
         return updatedRole != null ? "Role updated successfully" : null;
     }
 
-    public String deleteRole(Role existingRole) {
+    public String deleteRole(Integer id) {
+        rolePermissionRepository.deleteAllByRoleId(id);
+        userRoleRepository.deleteAllByRoleId(id);
+        Role existingRole = roleRepository.findById(id).orElse(null);
         roleRepository.delete(existingRole);
         return "Role deleted successfully";
     }

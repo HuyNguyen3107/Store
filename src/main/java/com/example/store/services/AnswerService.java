@@ -30,7 +30,7 @@ public class AnswerService {
         Answer answer = new Answer();
         answer.setContent(answerDTO.getContent());
         answer.setHomeworkId(Integer.parseInt(answerDTO.getHomeworkId()));
-        answer.setStudentId(Integer.parseInt(answerDTO.getStudentId()));
+        answer.setUserId(Integer.parseInt(answerDTO.getUserId()));
         Answer savedAnswer = answerRepository.save(answer);
         return savedAnswer != null ? "Answer created successfully" : null;
     }
@@ -39,7 +39,7 @@ public class AnswerService {
     public String updateAnswer(Answer existingAnswer, AnswerDTO answerDTO) {
         existingAnswer.setContent(answerDTO.getContent());
         existingAnswer.setHomeworkId(Integer.parseInt(answerDTO.getHomeworkId()));
-        existingAnswer.setStudentId(Integer.parseInt(answerDTO.getStudentId()));
+        existingAnswer.setUserId(Integer.parseInt(answerDTO.getUserId()));
         Answer updatedAnswer = answerRepository.save(existingAnswer);
         return updatedAnswer != null ? "Answer updated successfully" : null;
     }

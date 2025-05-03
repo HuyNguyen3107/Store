@@ -13,4 +13,8 @@ public interface UserRoleRepository extends JpaRepository<UserRole, Integer> {
     @Modifying
     @Transactional
     void deleteAllByUserId(Integer userId);
+
+    @Modifying
+    @Transactional
+    void deleteAllByRoleId(Integer userId);
 }

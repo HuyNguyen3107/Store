@@ -75,9 +75,9 @@ public class AnswerController {
             return ResponseEntity.badRequest().body("Homework not found");
         }
 
-        Student student = studentService.getStudentById(Integer.parseInt(answerDTO.getStudentId()));
-        if (student == null) {
-            return ResponseEntity.badRequest().body("Student not found");
+        User userExist = userService.getUserById(Integer.parseInt(answerDTO.getUserId()));
+        if (userExist == null) {
+            return ResponseEntity.badRequest().body("User not found");
         }
 
         String status = answerService.createAnswer(answerDTO);
@@ -108,9 +108,9 @@ public class AnswerController {
             return ResponseEntity.badRequest().body("Homework not found");
         }
 
-        Student student = studentService.getStudentById(Integer.parseInt(answerDTO.getStudentId()));
-        if (student == null) {
-            return ResponseEntity.badRequest().body("Student not found");
+        User userExist = userService.getUserById(Integer.parseInt(answerDTO.getUserId()));
+        if (userExist == null) {
+            return ResponseEntity.badRequest().body("User not found");
         }
 
         String status = answerService.updateAnswer(existingAnswer, answerDTO);

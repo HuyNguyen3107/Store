@@ -114,7 +114,7 @@ public class RoleController {
             return ResponseEntity.notFound().build();
         }
 
-        String status = roleService.deleteRole(existingRole);
+        String status = roleService.deleteRole(id);
         return ResponseEntity.ok(status);
     }
 

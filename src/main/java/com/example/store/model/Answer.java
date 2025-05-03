@@ -8,7 +8,7 @@ import lombok.*;
 import java.time.Instant;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-@ToString(exclude = {"student", "homework"})
+@ToString(exclude = {"user", "homework"})
 @Entity
 @Table(name = "answers")
 @Data
@@ -22,8 +22,8 @@ public class Answer {
     private String content;
 
     @NotNull
-    @Column(name = "student_id")
-    private Integer studentId;
+    @Column(name = "user_id")
+    private Integer userId;
 
     @NotNull
     @Column(name = "homework_id")
@@ -32,9 +32,9 @@ public class Answer {
     public Answer() {
     }
 
-    public Answer(String content, Integer studentId, Integer homeworkId) {
+    public Answer(String content, Integer userId, Integer homeworkId) {
         this.content = content;
-        this.studentId = studentId;
+        this.userId = userId;
         this.homeworkId = homeworkId;
     }
 
@@ -54,12 +54,12 @@ public class Answer {
         this.content = content;
     }
 
-    public Integer getStudentId() {
-        return this.studentId;
+    public Integer getUserId() {
+        return this.userId;
     }
 
-    public void setStudentId(Integer studentId) {
-        this.studentId = studentId;
+    public void setUserId(Integer userId) {
+        this.userId = userId;
     }
 
     public Integer getHomeworkId() {
@@ -88,9 +88,9 @@ public class Answer {
     }
 
     @ManyToOne
-    @JoinColumn(name = "student_id", referencedColumnName = "id", insertable = false, updatable = false)
+    @JoinColumn(name = "user_id", referencedColumnName = "id", insertable = false, updatable = false)
     @JsonIgnore
-    private Student student;
+    private User user;
 
     @ManyToOne
     @JoinColumn(name = "homework_id", referencedColumnName = "id", insertable = false, updatable = false)

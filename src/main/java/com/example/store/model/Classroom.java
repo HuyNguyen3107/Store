@@ -22,7 +22,6 @@ public class Classroom {
     @Column(name = "name")
     private String name;
 
-    @NotNull
     @Column(name = "teacher_id")
     private Integer teacherId;
 

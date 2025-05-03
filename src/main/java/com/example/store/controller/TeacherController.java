@@ -18,9 +18,11 @@ import java.util.*;
 public class TeacherController {
     private final TeacherService teacherService;
     private final UserService userService;
+    private final ClassroomService classroomService;
 
     @Autowired
-    public TeacherController(TeacherService teacherService, UserService userService) {
+    public TeacherController(TeacherService teacherService, UserService userService, ClassroomService classroomService) {
+        this.classroomService = classroomService;
         this.userService = userService;
         this.teacherService = teacherService;
     }
@@ -120,7 +122,14 @@ public class TeacherController {
         if (existingTeacher == null) {
             return ResponseEntity.notFound().build();
         }
-        String status = teacherService.deleteTeacher(id);
+        List<Classroom> classrooms = existingTeacher.getClassrooms();
+        int[] classroomIds = new int[classrooms.size()];
+        for (int i = 0; i < classrooms.size(); i++) {
+            classroomIds[i] = classrooms.get(i).getId();
+        }
+        classroomService.updateTeacherIdToNull(classroomIds);
+        Teacher teacher = teacherService.getTeacherById(id);
+        String status = teacherService.deleteTeacher(teacher);
         if (status != null) {
             return ResponseEntity.ok(status);
         } else {

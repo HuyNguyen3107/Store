@@ -158,4 +158,7 @@ public class User {
         inverseJoinColumns = @JoinColumn(name = "role_id", insertable = false, updatable = false)
     )
     private List<Role> roles = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", orphanRemoval = true)
+    private List<Answer> answers = new ArrayList<>();
 }

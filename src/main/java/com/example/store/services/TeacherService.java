@@ -45,9 +45,9 @@ public class TeacherService {
         return updatedTeacher != null ? "Teacher updated successfully" : null;
     }
 
-    public String deleteTeacher(Integer id) {
+    public String deleteTeacher(Teacher existingTeacher) {
         try {
-            teacherRepository.deleteById(id);
+            teacherRepository.delete(existingTeacher);
             return "Teacher deleted successfully";
         } catch (Exception e) {
             return null;
