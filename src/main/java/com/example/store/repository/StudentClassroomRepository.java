@@ -14,4 +14,8 @@ public interface StudentClassroomRepository extends JpaRepository<StudentClassro
     @Modifying
     @Transactional
     void deleteAllByClassId(int classId);
+
+    @Modifying
+    @Transactional
+    void deleteAllByStudentId(int studentId);
 }

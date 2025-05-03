@@ -17,11 +17,13 @@ import java.util.*;
 public class StudentController {
     private final StudentService studentService;
     private final UserService userService;
+    private final StudentClassroomService studentClassroomService;
 
     @Autowired
-    public StudentController(StudentService studentService, UserService userService) {
+    public StudentController(StudentService studentService, UserService userService, StudentClassroomService studentClassroomService) {
         this.userService = userService;
         this.studentService = studentService;
+        this.studentClassroomService = studentClassroomService;
     }
 
     @GetMapping
@@ -114,6 +116,7 @@ public class StudentController {
         if (!hasPermission) {
             return ResponseEntity.status(403).body("Forbidden"); // Forbidden
         }
+        studentClassroomService.deleteAllByStudentId(id);
         Student existingStudent = studentService.getStudentById(id);
         if (existingStudent == null) {
             return ResponseEntity.notFound().build();

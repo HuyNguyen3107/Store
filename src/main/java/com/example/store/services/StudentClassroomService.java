@@ -49,4 +49,9 @@ public class StudentClassroomService {
         studentClassroomRepository.deleteAllByClassId(classId);
         return "All students removed from classroom successfully";
     }
+    
+    public String deleteAllByStudentId(int studentId) {
+        studentClassroomRepository.deleteAllByStudentId(studentId);
+        return "All classrooms removed from student successfully";
+    }
 }

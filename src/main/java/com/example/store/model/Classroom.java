@@ -26,7 +26,6 @@ public class Classroom {
     @Column(name = "teacher_id")
     private Integer teacherId;
 
-    @NotNull
     @Column(name = "course_id")
     private Integer courseId;
 
