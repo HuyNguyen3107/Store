@@ -8,6 +8,7 @@ import com.example.store.dto.*;
 import java.util.*;
 import com.example.store.helper.GeneratePwHelper;
 import com.example.store.util.*;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class CourseService {
@@ -49,8 +50,8 @@ public class CourseService {
         return updatedCourse != null ? "Course updated successfully" : null;
     }
 
-    public String deleteCourse(Course course) {
-        courseRepository.delete(course);
+    public String deleteCourse(Integer id) {
+        courseRepository.deleteById(id);
         return "Course deleted successfully";
     }
 }

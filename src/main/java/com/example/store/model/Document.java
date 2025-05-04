@@ -32,7 +32,6 @@ public class Document {
     @Column(name = "content")
     private String content;
 
-    @NotNull
     @Column(name = "course_id")
     private Integer courseId;
 

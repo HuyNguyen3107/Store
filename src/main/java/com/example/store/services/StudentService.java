@@ -8,6 +8,7 @@ import com.example.store.dto.*;
 import java.util.*;
 import com.example.store.helper.GeneratePwHelper;
 import com.example.store.util.*;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class StudentService {
@@ -41,6 +42,7 @@ public class StudentService {
         return updatedStudent != null ? "Student updated successfully" : null;
     }
 
+    @Transactional
     public String deleteStudent(Student existingStudent) {
         try {
             studentRepository.delete(existingStudent);

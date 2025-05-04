@@ -10,4 +10,6 @@ import java.util.*;
 @Repository
 public interface CourseRepository extends JpaRepository<Course, Integer> {
     Course findByName(String name);
+
+    void deleteById(Integer id);
 }

@@ -51,4 +51,15 @@ public class DocumentService {
         documentRepository.delete(existingDocument);
         return "Document deleted successfully";
     }
+
+    public String updateCourseIdToNull(int[] documentIds) {
+        for (int documentId : documentIds) {
+            Document document = documentRepository.findById(documentId).orElse(null);
+            if (document != null) {
+                document.setCourseId(null);
+                documentRepository.save(document);
+            }
+        }
+        return "Course IDs updated to null successfully";
+    }
 }

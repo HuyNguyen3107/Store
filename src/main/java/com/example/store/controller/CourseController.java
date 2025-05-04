@@ -18,9 +18,11 @@ public class CourseController {
     private final CourseService courseService;
     private final UserService userService;
     private final ClassroomService classroomService;
+    private final DocumentService documentService;
 
     @Autowired
-    public CourseController(CourseService courseService, UserService userService, ClassroomService classroomService) {
+    public CourseController(CourseService courseService, UserService userService, ClassroomService classroomService, DocumentService documentService) {
+        this.documentService = documentService;
         this.classroomService = classroomService;
         this.userService = userService;
         this.courseService = courseService;
@@ -123,8 +125,15 @@ public class CourseController {
             classroomIds[i] = classrooms.get(i).getId();
         }
         classroomService.updateCourseIdToNull(classroomIds);
-        Course courseToDelete = courseService.getCourseById(id);
-        String status = courseService.deleteCourse(courseToDelete);
+
+        List<Document> documents = existingCourse.getDocuments();
+        int[] documentIds = new int[documents.size()];
+        for (int i = 0; i < documents.size(); i++) {
+            documentIds[i] = documents.get(i).getId();
+        }
+        documentService.updateCourseIdToNull(documentIds);
+        // Course course = courseService.reloadCourse(id);
+        String status = courseService.deleteCourse(id);
         if (status != null) {
             return ResponseEntity.ok(status);
         } else {
